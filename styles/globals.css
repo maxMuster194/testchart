@@ -1,0 +1,266 @@
+/* Allgemeines Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #F5F5F5;
+    color: #333333;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  /* Container für die gesamte Komponente */
+  div {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Überschriften */
+  h2, h3 {
+    color: #006764;
+    margin-bottom: 15px;
+  }
+  
+  /* Navigation */
+  .navigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .navigation button {
+    background-color: #006764;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .navigation button:hover {
+    background-color: #4AB8B4;
+    transform: translateY(-2px);
+  }
+  
+  .navigation button:active {
+    transform: translateY(0);
+  }
+  
+  /* Tabellen */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  
+  th {
+    background-color: #006764;
+    color: #FFFFFF;
+    font-weight: bold;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #F9F9F9;
+  }
+  
+  tr:hover {
+    background-color: #E6F0EF;
+  }
+  
+  /* Eingabefelder */
+  input[type="number"],
+  input[type="time"] {
+    padding: 8px;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 150px;
+    transition: border-color 0.3s ease;
+  }
+  
+  input[type="number"]:focus,
+  input[type="time"]:focus {
+    border-color: #006764;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 103, 100, 0.3);
+  }
+  
+  input::placeholder {
+    color: #999999;
+  }
+  
+  /* Checkboxen */
+  input[type="checkbox"] {
+    accent-color: #006764;
+    margin-right: 5px;
+  }
+  
+  /* Buttons in Tabellen und Optionen */
+  button {
+    background-color: #006764;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #4AB8B4;
+  }
+  
+  button:active {
+    background-color: #005554;
+  }
+  
+  /* Personen-Buttons */
+  .personen-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .personen-buttons button {
+    background-color: #E0E0E0;
+    color: #333333;
+    padding: 10px 15px;
+  }
+  
+  .personen-buttons button:hover {
+    background-color: #4AB8B4;
+    color: #FFFFFF;
+  }
+  
+  /* Optionen-Buttons */
+  .optionen {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .optionen button {
+    background-color: #E0E0E0;
+    color: #333333;
+  }
+  
+  .optionen button:hover {
+    background-color: #4AB8B4;
+    color: #FFFFFF;
+  }
+  
+  /* Erweiterte Optionen */
+  #erweiterteOptionenButton {
+    margin-bottom: 15px;
+  }
+  
+  #erweiterteOptionen {
+    background-color: #FFFFFF;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Ladezyklen */
+  .ladezyklus {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .ladezyklus input[type="time"] {
+    max-width: 100px;
+  }
+  
+  .ladezyklus button {
+    padding: 5px 10px;
+  }
+  
+  /* Kosten-Anzeige */
+  .kosten-anzeige {
+    font-weight: bold;
+    color: #006764;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+  
+    th {
+      display: none;
+    }
+  
+    td {
+      position: relative;
+      padding-left: 50%;
+      text-align: right;
+    }
+  
+    td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 10px;
+      width: 45%;
+      font-weight: bold;
+      color: #006764;
+    }
+  
+    .navigation {
+      flex-direction: column;
+    }
+  
+    .navigation button {
+      width: 100%;
+    }
+  
+    .personen-buttons, .optionen {
+      flex-direction: column;
+    }
+  
+    .personen-buttons button, .optionen button {
+      width: 100%;
+    }
+  }
+
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 10px;
+    color: #333; /* Dunkelgrau, anpassen nach Wunsch */
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 300px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 12px; /* Runder Tooltip */
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
