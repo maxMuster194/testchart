@@ -1,5 +1,5 @@
 // pages/api/prices.js
-import connectToDatabase from '/lib/mongoose';
+import connectToDatabase from '../lib/mongoose';
 import Price from '@/models/Price';
 
 export default async function handler(req, res) {
