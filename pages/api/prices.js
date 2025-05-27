@@ -1,6 +1,6 @@
 // pages/api/prices.js
-import connectToDatabase from '../lib/mongoose';
-import Price from '@/models/Price';
+import { connectToDatabase } from '../../lib/mongoose'; // Benannter Import
+import Price from '../../models/Price'; // Pfad anpassen, falls kein @/models-Alias verwendet wird
 
 export default async function handler(req, res) {
   try {
