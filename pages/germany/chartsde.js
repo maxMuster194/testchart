@@ -286,99 +286,112 @@ export default function StrompreisChart() {
       })
     : Array(24).fill(null);
 
-  const combinedChart = {
-    labels: labelsAll,
-    datasets: [
-      {
-        label: `Strompreise (Cent/kWh)`,
-        data: strompreisChartValues.length > 0 ? strompreisChartValues : Array(24).fill(null),
-        borderColor: '#FFC107',
-        backgroundColor: 'rgba(255, 193, 7, 0.1)',
-        fill: false,
-        tension: 0.3,
-        pointRadius: 3,
-        pointHoverRadius: 5,
+    const combinedChart = {
+      labels: labelsAll,
+      datasets: [
+        {
+          label: `Strompreise (Cent/kWh)`,
+          data: strompreisChartValues.length > 0 ? strompreisChartValues : Array(24).fill(null),
+          borderColor: '#FFC107',
+          backgroundColor: 'rgba(255, 193, 7, 0.1)',
+          fill: false,
+          tension: 0.3,
+          pointRadius: 0, // Remove points
+          pointHoverRadius: 0, // Remove hover points
+        },
+        {
+          label: 'H0PV * Strompreis (Cent/kWh)',
+          data: h0PVAdjustedValues,
+          borderColor: '#8dd770',
+          backgroundColor: 'rgba(255, 0, 0, 0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 0, // Remove points
+          pointHoverRadius: 0, // Remove hover points
+          hidden: !showH0PVProfiles,
+        },
+        {
+          label: `H0 * Preis (${customPrice || 'N/A'} Cent/kWh)`,
+          data: customPriceValues,
+          borderColor: '#808080',
+          backgroundColor: 'rgba(30, 136, 229, 0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 0, // Remove points
+          pointHoverRadius: 0, // Remove hover points
+          hidden: !showH0Profiles || isNaN(parsedCustomPrice) || parsedCustomPrice < 0,
+        },
+        {
+          label: `H0PV * Preis (${customPrice || 'N/A'} Cent/kWh)`,
+          data: customH0PVPriceValues,
+          borderColor: '#808080',
+          backgroundColor: 'rgba(255, 105, 180, 0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 0, // Remove points
+          pointHoverRadius: 0, // Remove hover points
+          hidden: !showH0PVProfiles || isNaN(parsedCustomPrice) || parsedCustomPrice < 0,
+        },
+        {
+          label: 'H0 * Strompreis (Cent/kWh)',
+          data: h0AdjustedValues,
+          borderColor: '#8dd770',
+          backgroundColor: 'rgba(30, 136, 229, 0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 0, // Remove points
+          pointHoverRadius: 0, // Remove hover points
+          hidden: !showH0Profiles,
+        },
+      ],
+    };
+    
+    const combinedChartOptions = {
+      responsive: true,
+      interaction: {
+        mode: 'nearest', // Find the nearest point along the line
+        axis: 'x', // Restrict to x-axis for line charts
+        intersect: false, // Trigger tooltip even when not directly over a point
       },
-      {
-        label: 'H0PV * Strompreis (Cent/kWh)',
-        data: h0PVAdjustedValues,
-        borderColor: '#8dd770',
-        backgroundColor: 'rgba(255, 0, 0, 0.1)',
-        fill: false,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        hidden: !showH0PVProfiles,
-      },
-      {
-        label: `H0 * Preis (${customPrice || 'N/A'} Cent/kWh)`,
-        data: customPriceValues,
-        borderColor: '#808080',
-        backgroundColor: 'rgba(30, 136, 229, 0.1)',
-        fill: false,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        hidden: !showH0Profiles || isNaN(parsedCustomPrice) || parsedCustomPrice < 0,
-      },
-      {
-        label: `H0PV * Preis (${customPrice || 'N/A'} Cent/kWh)`,
-        data: customH0PVPriceValues,
-        borderColor: '#808080',
-        backgroundColor: 'rgba(255, 105, 180, 0.1)',
-        fill: false,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        hidden: !showH0PVProfiles || isNaN(parsedCustomPrice) || parsedCustomPrice < 0,
-      },
-      {
-        label: 'H0 * Strompreis (Cent/kWh)',
-        data: h0AdjustedValues,
-        borderColor: '#8dd770',
-        backgroundColor: 'rgba(30, 136, 229, 0.1)',
-        fill: false,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        hidden: !showH0Profiles,
-      },
-    ],
-  };
-
-  const combinedChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false, // Legende wird ausgeblendet
-      },
-      tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleFont: { family: "'Inter', sans-serif" },
-        bodyFont: { family: "'Inter', sans-serif" },
-        callbacks: {
-          label: function (context) {
-            const index = context.dataIndex;
-            const label = context.dataset.label;
-            const value = context.raw ? context.raw.toFixed(3) : 'N/A';
-            return `${label}: ${value} ct/kWh`;
+      plugins: {
+        legend: {
+          display: false, // Legende wird ausgeblendet
+        },
+        tooltip: {
+          enabled: true, // Ensure tooltip is enabled
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleFont: { family: "'Inter', sans-serif" },
+          bodyFont: { family: "'Inter', sans-serif" },
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || '';
+              const value = context.raw != null ? context.raw.toFixed(3) : 'N/A';
+              return `${label}: ${value} ct/kWh`;
+            },
           },
         },
       },
-    },
-    scales: {
-      y: {
-        beginAtZero: false,
-        title: { display: true, text: 'Wert (Cent/kWh)', font: { size: 14, family: "'Inter', sans-serif" }, color: '#333' },
-        ticks: { callback: (value) => `${value.toFixed(2)}` },
-        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+      scales: {
+        y: {
+          beginAtZero: false,
+          title: { display: true, text: 'Wert (Cent/kWh)', font: { size: 14, family: "'Inter', sans-serif" }, color: '#333' },
+          ticks: { callback: (value) => `${value.toFixed(2)}` },
+          grid: { 
+            display: true,
+            color: 'rgba(0, 0, 0, 0.1)',
+            lineWidth: 1,
+          },
+        },
+        x: {
+          title: { display: true, text: 'Stunde', font: { size: 14, family: "'Inter', sans-serif" }, color: '#333' },
+          grid: { 
+            display: true,
+            color: 'rgba(0, 0, 0, 0.1)',
+            lineWidth: 1,
+          },
+        },
       },
-      x: {
-        title: { display: true, text: 'Stunde', font: { size: 14, family: "'Inter', sans-serif" }, color: '#333' },
-        grid: { display: false },
-      },
-    },
-  };
+    };
 
   return (
     <div style={styles.container}>
@@ -496,7 +509,7 @@ export default function StrompreisChart() {
 
           {(strompreisChartData.length > 0 || selectedH0Data || selectedH0PVData || customPriceValues.some(v => v !== null) || customH0PVPriceValues.some(v => v !== null)) ? (
             <div className="chart-container">
-              <h2 style={styles.chartTitle}> Preisverlauf (0–23 Uhr)📈</h2>
+              <h2 style={styles.chartTitle}> Preisverlauf (0–23 Uhr)</h2>
               <Line data={combinedChart} options={combinedChartOptions} />
             </div>
           ) : (

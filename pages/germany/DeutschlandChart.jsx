@@ -1,6 +1,20 @@
 import { useEffect, useState } from 'react';
-import Berechnung from './Berechnung';
-import Chartsde from './chartsde'; // Corrected import name and path
+import {
+  Line
+} from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import Berechnung from '../germany/Berechnung';
+import Profil03 from '../haushalt/Profil0.3'; // Import der neuen Komponente (umbenannt für Klarheit)
+
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
 const styles = {
   banner: {
@@ -53,6 +67,15 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '4px',
     fontSize: '1rem',
+  },
+  chartContainer: {
+    marginTop: '2rem',
+  },
+  chartTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '500',
+    marginBottom: '1rem',
+    color: '#1a1a1a',
   },
   loading: {
     fontSize: '1.25rem',
@@ -130,8 +153,36 @@ export default function DeutschlandChart() {
     fetchData();
   }, []);
 
+  const toInputDate = (dateStr) => {
+    if (!dateStr || typeof dateStr !== 'string') return '';
+    const [day, month, year] = dateStr.split('/');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  };
+
+  const fromInputDate = (inputDate) => {
+    const [year, month, day] = inputDate.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   if (loading) return <div style={styles.loading}>⏳ Daten werden geladen…</div>;
   if (!data.length) return <div style={styles.noData}>⚠️ Keine Daten gefunden.</div>;
+
+  const selectedIndex = data.findIndex((entry) => {
+    const dateKey = Object.keys(entry).find((key) => key.includes('Prices - EPEX'));
+    return dateKey && entry[dateKey] === selectedDate;
+  });
+
+  const labelsAll = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+  const rawValuesAll = selectedIndex !== -1 ? data[selectedIndex]?.__parsed_extra.slice(0, 24) : [];
+
+  const chartData = labelsAll
+    .map((label, i) => ({ label, value: rawValuesAll[i], index: i }))
+    .filter((entry) => entry.value != null);
+  const chartLabels = chartData.map((entry) => entry.label);
+  const chartRawValues = chartData.map((entry) => entry.value);
+  const chartConvertedValues = chartRawValues.map((v) =>
+    typeof v === 'number' ? v * 0.1 : parseFloat(v) * 0.1 || null
+  );
 
   return (
     <div>
@@ -146,8 +197,67 @@ export default function DeutschlandChart() {
           <Berechnung />
         </div>
         <div style={styles.rightColumn}>
-         
-          <Chartsde data={data} selectedDate={selectedDate} />
+          <h1 style={styles.title}>🇩🇪 Deutschland Strompreise – {selectedDate || 'Kein Datum ausgewählt'}</h1>
+          <div style={styles.datePickerContainer}>
+            <label htmlFor="date-picker" style={styles.datePickerLabel}>
+              🔎 Datum auswählen:
+            </label>
+            <input
+              id="date-picker"
+              type="date"
+              value={toInputDate(selectedDate)}
+              onChange={(e) => setSelectedDate(fromInputDate(e.target.value))}
+              style={styles.datePicker}
+              disabled={availableDates.length === 0}
+            />
+          </div>
+          {availableDates.length === 0 && (
+            <div style={styles.noData}>⚠️ Keine gültigen Daten verfügbar. Bitte überprüfen Sie die Datenbank.</div>
+          )}
+          {chartData.length > 0 ? (
+            <div style={styles.chartContainer}>
+              <h2 style={styles.chartTitle}>📈 Preisverlauf (0–23 Uhr)</h2>
+              <Line
+                data={{
+                  labels: chartLabels,
+                  datasets: [
+                    {
+                      label: `Strompreise am ${selectedDate || 'N/A'} (in Cent/kWh)`,
+                      data: chartConvertedValues,
+                      fill: false,
+                      borderColor: '#ff4500',
+                      backgroundColor: '#ff4500',
+                      tension: 0.3,
+                      pointRadius: 3,
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: false,
+                      ticks: {
+                        callback: (value) => `${value.toFixed(2)} ct`,
+                      },
+                    },
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <div style={styles.noData}>⚠️ Keine Daten für das ausgewählte Datum.</div>
+          )}
+          {/* Neue Grafik aus Profil0.3.js */}
+          <div style={styles.chartContainer}>
+            <h2 style={styles.chartTitle}>📈 Profil 0.3 Vergleich (0–23 Uhr)</h2>
+            <Profil03 selectedDate={selectedDate} /> {/* Übergabe des ausgewählten Datums */}
+          </div>
         </div>
       </div>
     </div>
