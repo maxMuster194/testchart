@@ -130,7 +130,7 @@ const styles = {
     padding: '1rem',
     textAlign: 'left',
     backgroundColor: '#f0fdf4',
-    borderBottom: '2px solid #d1fae5',
+    borderBottom: '2px solidrgb(10, 232, 117)',
     fontWeight: '600',
     color: '#1a4731',
     fontSize: '1.1rem',
