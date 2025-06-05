@@ -197,12 +197,12 @@ const styles = {
     textAlign: 'center',
   },
   monthlyAverage: {
-    backgroundColor: '#f4f6f8',           // Helles Grau für Lesbarkeit
-    color: '#2c3e50',                     // Dunkler Text
+    backgroundColor: '#f4f6f8',
+    color: '#2c3e50',
     padding: '16px 20px',
     marginBottom: '12px',
     borderRadius: '10px',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.08)', // Leichter Schatten
+    boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
     fontSize: '16px',
     fontWeight: '500',
     display: 'flex',
@@ -340,7 +340,7 @@ export default function MongoDBPricesPage() {
   const [monthlyData, setMonthlyData] = useState({});
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [verbrauchInput, setVerbrauchInput] = useState('');
-  const [eigenerPreis, setEigenerPreis] = useState(''); // Eigener Preis is in Cent/kWh
+  const [eigenerPreis, setEigenerPreis] = useState('');
   const [zeitraum, setZeitraum] = useState('monatlich');
   const [displayedKwh, setDisplayedKwh] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -450,17 +450,13 @@ export default function MongoDBPricesPage() {
       if (monthData.length > 0) {
         const daysInMonth = monthData.length;
         if (zeitraum === 'täglich') {
-          // Jahresverbrauch durch 365 Tage, dann auf Monat hochrechnen
           kwhValue = ((verbrauch / 365) * daysInMonth).toFixed(2);
         } else if (zeitraum === 'monatlich') {
-          // Jahresverbrauch durch 12 Monate
           kwhValue = (verbrauch / 12).toFixed(2);
-        } else { // jährlich
-          // Einfach den Jahreswert übernehmen
+        } else {
           kwhValue = verbrauch.toFixed(2);
         }
       }
-      
 
       kwhValues[monthKey] = kwhValue;
     });
@@ -510,7 +506,7 @@ export default function MongoDBPricesPage() {
   };
 
   const getWeekDateRange = (days) => {
-    if (!days || !days.length) return '–';
+    if (!days || !days.length) return '–e';
     const startDate = days[0];
     const endDate = days[days.length - 1];
     return `${startDate} - ${endDate}`;
@@ -528,9 +524,13 @@ export default function MongoDBPricesPage() {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedMonth(null);
   };
 
-  if (loading) return <div style={styles.loading}>⏳ Daten werden geladen…</div>;
+  if (loading) {
+    return <div style={styles.loading}>⏳ Daten werden geladen…</div>;
+  }
+
   if (!data.length && !Object.keys(monthlyData).length) {
     return <div style={styles.noData}>⚠️ Keine Daten gefunden.</div>;
   }
@@ -540,7 +540,9 @@ export default function MongoDBPricesPage() {
       <h1 style={styles.title}>🇩🇪 Vergleich 0.6</h1>
 
       <div style={styles.inputContainer}>
-        <label style={styles.inputLabel} htmlFor="verbrauchInput">Verbrauch und Preis eingeben:</label>
+        <label htmlFor="verbrauchInput" style={styles.inputLabel}>
+          Verbrauch und Preis eingeben:
+        </label>
         <div style={styles.inputGroup}>
           <input
             type="number"
@@ -581,10 +583,7 @@ export default function MongoDBPricesPage() {
           return (
             <div
               key={monthKey}
-              style={{
-                ...styles.card,
-                ...(selectedMonth === monthKey ? styles.selectedCard : {}),
-              }}
+              style={selectedMonth === monthKey ? { ...styles.card, ...styles.selectedCard } : styles.card}
               onClick={() => handleCardClick(monthKey)}
             >
               <div style={styles.cardTitle}>{monthNames[index]}</div>
@@ -604,7 +603,7 @@ export default function MongoDBPricesPage() {
       {isModalOpen && selectedMonth && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
-            <button style={styles.modalCloseButton} onClick={closeModal}>
+            <button onClick={closeModal} style={styles.modalCloseButton}>
               ×
             </button>
             {monthlyData[selectedMonth] && monthlyData[selectedMonth].length > 0 ? (
@@ -621,39 +620,98 @@ export default function MongoDBPricesPage() {
                 <div style={styles.monthlyAverage}>
                   💰 Eingegebener Preis: {eigenerPreis ? `${eigenerPreis} Cent/kWh` : '–'}
                 </div>
-                <h3 style={styles.chartTitle}>📅 Wöchentliche Durchschnitte</h3>
-                <table style={styles.table}>
-                  <thead>
-                    <tr>
-                      <th style={styles.th}>Kalenderwoche</th>
-                      <th style={styles.th}>Zeitraum</th>
-                      <th style={styles.th}>Wöchentlicher Durchschnitt (Cent/kWh)</th>
-                      <th style={styles.th}>Kosten (€)</th>
-                      <th style={styles.th}>Kosten Eigener Preis (€)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {calculateWeeklyAverages(selectedMonth, monthlyData[selectedMonth]).map((week, i) => {
-                      const verbrauch = parseFloat(displayedKwh[selectedMonth]) || 0;
-                      const weeklyAverage = week.average !== '–' ? parseFloat(week.average) : 0;
-                      const eigenerPreisValue = parseFloat(eigenerPreis) || 0;
-                      // Kosten: weekly average (Cent/kWh) * verbrauch (kWh) / 100 to convert to Euros
-                      const kosten = verbrauch && weeklyAverage ? (weeklyAverage * verbrauch / 100).toFixed(2) : '–';
-                      // Kosten Eigener Preis: eigenerPreis (Cent/kWh) * verbrauch / 100 to convert to Euros
-                      const kostenEigenerPreis = verbrauch && eigenerPreisValue ? (eigenerPreisValue * verbrauch / 100).toFixed(2) : '–';
+                {/* Entfernte Tabelle: Wöchentliche Durchschnitte */}
+                <div style={styles.summaryContainer}>
+                  <h3 style={styles.monthTitle}>Zusammenfassung Wöchentliche Kosten</h3>
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        <th style={styles.th}>Kalenderwoche</th>
+                        <th style={styles.th}>Zeitraum</th>
+                        <th style={styles.th}>Wöchentlicher Durchschnitt (Cent/kWh)</th>
+                        <th style={styles.th}>Verbrauch (kWh)</th>
+                        <th style={styles.th}>Kosten (€)</th>
+                        <th style={styles.th}>Kosten Eigener Preis (€)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {calculateWeeklyAverages(selectedMonth, monthlyData[selectedMonth]).map((week, i) => {
+                        const verbrauch = parseFloat(displayedKwh[selectedMonth]) || 0;
+                        const weeklyAverage = week.average !== '–' ? parseFloat(week.average) : 0;
+                        const eigenerPreisValue = parseFloat(eigenerPreis) || 0;
+                        const weeklyKwh = verbrauch ? (verbrauch / 4).toFixed(2) : '–';
+                        const kosten = verbrauch && weeklyAverage ? ((weeklyAverage * verbrauch) / 100 / 4).toFixed(2) : '–';
+                        const kostenEigenerPreis = verbrauch && eigenerPreisValue ? ((eigenerPreisValue * verbrauch) / 100 / 4).toFixed(2) : '–';
 
-                      return (
-                        <tr key={week.kw} style={i % 2 === 0 ? styles.trEven : styles.trOdd}>
-                          <td style={styles.td}>KW {week.kw}</td>
-                          <td style={styles.td}>{getWeekDateRange(week.days)}</td>
-                          <td style={styles.td}>{week.average}</td>
-                          <td style={styles.td}>{kosten}</td>
-                          <td style={styles.td}>{kostenEigenerPreis}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                        return (
+                          <tr key={week.kw} style={i % 2 === 0 ? styles.trEven : styles.trOdd}>
+                            <td style={styles.td}>KW {week.kw}</td>
+                            <td style={styles.td}>{getWeekDateRange(week.days)}</td>
+                            <td style={styles.td}>{week.average}</td>
+                            <td style={styles.td}>{weeklyKwh}</td>
+                            <td style={styles.td}>{kosten}</td>
+                            <td style={styles.td}>{kostenEigenerPreis}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    <tfoot>
+                      <tr style={styles.trEven}>
+                        <td style={styles.td} colSpan={2}><strong>Gesamt</strong></td>
+                        <td style={styles.td}>
+                          <strong>
+                            {(() => {
+                              const weeklyAverages = calculateWeeklyAverages(selectedMonth, monthlyData[selectedMonth]);
+                              const validAverages = weeklyAverages
+                                .filter((week) => week.average !== '–')
+                                .map((week) => parseFloat(week.average));
+                              return validAverages.length > 0
+                                ? (validAverages.reduce((sum, val) => sum + val, 0) / validAverages.length).toFixed(2)
+                                : '–';
+                            })()}
+                          </strong>
+                        </td>
+                        <td style={styles.td}>
+                          <strong>
+                            {(() => {
+                              const verbrauch = parseFloat(displayedKwh[selectedMonth]) || 0;
+                              return verbrauch ? verbrauch.toFixed(2) : '–';
+                            })()}
+                          </strong>
+                        </td>
+                        <td style={styles.td}>
+                          <strong>
+                            {(() => {
+                              const weeklyAverages = calculateWeeklyAverages(selectedMonth, monthlyData[selectedMonth]);
+                              const verbrauch = parseFloat(displayedKwh[selectedMonth]) || 0;
+                              const totalKosten = weeklyAverages
+                                .filter((week) => week.average !== '–')
+                                .reduce((sum, week) => {
+                                  const weeklyAverage = parseFloat(week.average);
+                                  return sum + (weeklyAverage * verbrauch) / 100 / 4;
+                                }, 0);
+                              return totalKosten ? totalKosten.toFixed(2) : '–';
+                            })()}
+                          </strong>
+                        </td>
+                        <td style={styles.td}>
+                          <strong>
+                            {(() => {
+                              const weeklyAverages = calculateWeeklyAverages(selectedMonth, monthlyData[selectedMonth]);
+                              const verbrauch = parseFloat(displayedKwh[selectedMonth]) || 0;
+                              const eigenerPreisValue = parseFloat(eigenerPreis) || 0;
+                              const totalKostenEigenerPreis = weeklyAverages
+                                .filter((week) => week.average !== '–')
+                                .reduce((sum) => sum + (eigenerPreisValue * verbrauch) / 100 / 4, 0);
+                              return totalKostenEigenerPreis ? totalKostenEigenerPreis.toFixed(2) : '–';
+                            })()}
+                          </strong>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  
+                </div>
                 {calculateWeeklyAverages(selectedMonth, monthlyData[selectedMonth]).filter((week) => week.average !== '–').length > 0 && (
                   <div style={styles.chartContainer}>
                     <h2 style={styles.chartTitle}>
@@ -709,7 +767,7 @@ export default function MongoDBPricesPage() {
                         })()}
                       </div>
                       <div style={styles.summaryItem}>
-                      Sparbetrag (verwendung von dynamsichem Tarif): {(() => {
+                        Sparbetrag (Verwendung von dynamischem Tarif): {(() => {
                           const verbrauch = parseFloat(displayedKwh[selectedMonth]) || 0;
                           const monthlyAverage = parseFloat(calculateMonthlyAverage(monthlyData[selectedMonth])) || 0;
                           const eigenerPreisValue = parseFloat(eigenerPreis) || 0;
