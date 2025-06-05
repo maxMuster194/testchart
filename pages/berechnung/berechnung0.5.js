@@ -67,32 +67,81 @@ function App() {
     }), {})
   );
   const [erweiterteEinstellungen, setErweiterteEinstellungen] = useState(
-    Object.keys(standardVerbraucher).reduce((acc, key) => ({
-      ...acc,
-      [key]: {
-        nutzung: key === 'waschmaschine' || key === 'wäschetrockner' ? 2 :
-                 key === 'geschirrspüler' ? 7 :
-                 key === 'herd' || key === 'multimedia' || key === 'licht' ? 3 : 0,
-        zeitraeume: [{
-          id: Date.now(),
-          startzeit: 'Startzeit',
-          endzeit: 'Endzeit',
-          dauer: key === 'waschmaschine' || key === 'wäschetrockner' ? 1.37 :
-                 key === 'geschirrspüler' ? 1.27 :
-                 key === 'herd' ? 1.0 :
-                 key === 'multimedia' ? 3.0 :
-                 key === 'licht' ? 5.0 : 0
-        }]
-      },
-    }), {})
+    Object.keys(standardVerbraucher).reduce((acc, key) => {
+      let startzeit, endzeit, dauer, nutzung;
+  
+      switch (key) {
+        case 'waschmaschine':
+          startzeit = '10:00';
+          endzeit = '11:30';
+          dauer = 1.37;
+          nutzung = 2;
+          break;
+        case 'wäschetrockner':
+          startzeit = '14:00';
+          endzeit = '15:30';
+          dauer = 1.37;
+          nutzung = 2;
+          break;
+        case 'geschirrspüler':
+          startzeit = '18:00';
+          endzeit = '19:30';
+          dauer = 1.27;
+          nutzung = 7;
+          break;
+        case 'herd':
+          startzeit = '12:00';
+          endzeit = '13:00';
+          dauer = 1.0;
+          nutzung = 3;
+          break;
+        case 'multimedia':
+          startzeit = '18:00';
+          endzeit = '22:00';
+          dauer = 3.0;
+          nutzung = 3;
+          break;
+        case 'licht':
+          startzeit = '18:00';
+          endzeit = '22:00';
+          dauer = 5.0;
+          nutzung = 3;
+          break;
+        case 'eauto':
+          startzeit = '00:00';
+          endzeit = '00:00';
+          dauer = 2.0;
+          nutzung = 0;
+          break;
+        default:
+          startzeit = 'Startzeit';
+          endzeit = 'Endzeit';
+          dauer = 0;
+          nutzung = 0;
+      }
+  
+      return {
+        ...acc,
+        [key]: {
+          nutzung,
+          zeitraeume: [{
+            id: Date.now() + Math.random(),
+            startzeit,
+            endzeit,
+            dauer
+          }]
+        }
+      };
+    }, {})
   );
+  
   const [showErweiterteOptionen, setShowErweiterteOptionen] = useState(false);
   const [zusammenfassung, setZusammenfassung] = useState({
     grundlast: 0,
     dynamisch: 0,
     gesamt: 0,
   });
-  const [ladezyklen, setLadezyklen] = useState([{ id: Date.now(), von: 'Startzeit', bis: 'Endzeit' }]);
+  const [ladezyklen, setLadezyklen] = useState([{ id: Date.now(), von: '06:00', bis: '08:00' }]);
   const [showLadezyklen, setShowLadezyklen] = useState(false);
   const [eAutoDaten, setEAutoDaten] = useState({
     batterieKW: 0,
@@ -362,7 +411,12 @@ function App() {
       ...prev,
       [verbraucher]: {
         ...prev[verbraucher],
-        zeitraeume: [...prev[verbraucher].zeitraeume, { id: Date.now(), startzeit: 'Startzeit', endzeit: 'Endzeit', dauer: 0 }]
+        zeitraeume: [...prev[verbraucher].zeitraeume, {
+          id: Date.now() + Math.random(), // Eindeutige ID
+          startzeit: '08:00', // Standard-Startzeit für neuen Zeitraum
+          endzeit: '10:00', // Standard-Endzeit für neuen Zeitraum
+          dauer: prev[verbraucher].zeitraeume[0].dauer || 0 // Übernahme der Dauer des ersten Zeitraums
+        }]
       }
     }));
   };
@@ -615,7 +669,8 @@ function App() {
                           />
                         </td>
                         <td className="p-2">
-                          <span className="tooltip" aria-label={`Beschreibung für ${verbraucher}`}>
+                          <span className="tooltip" aria-label={`Beschreibung für ${verbraucher}`}
+                          >
                             ℹ️
                             <span className="tooltiptext">{verbraucherBeschreibungen[verbraucher]}</span>
                           </span>
@@ -839,7 +894,7 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht', ].map(
+                    {['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht', 'eauto'].map(
                       (verbraucher) => (
                         <tr key={verbraucher} className="border-b">
                           <td className="p-2 align-top">{verbraucher.charAt(0).toUpperCase() + verbraucher.slice(1)}</td>
@@ -982,8 +1037,10 @@ function App() {
                       <td className="p-2">{verbraucherDaten[verbraucher].watt || 0} W</td>
                       <td className="p-2">{verbraucherDaten[verbraucher].kosten} €</td>
                       <td className="p-2">
-                        {erweiterteEinstellungen[verbraucher].nutzung || 0}{' '}
-                        {['herd', 'multimedia', 'licht'].includes(verbraucher) ? 'h/Tag' : 'h/Woche'}
+                        {['kühlschrank', 'gefrierschrank', 'aquarium'].includes(verbraucher)
+                          ? '24 h/Tag'
+                          : `${erweiterteEinstellungen[verbraucher].nutzung || 0} ${['herd', 'multimedia', 'licht'].includes(verbraucher) ? 'h/Tag' : 'h/Woche'}`
+                        }
                       </td>
                       <td className="p-2">
                         {erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (

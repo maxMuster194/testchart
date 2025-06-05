@@ -67,25 +67,68 @@ function App() {
     }), {})
   );
   const [erweiterteEinstellungen, setErweiterteEinstellungen] = useState(
-    Object.keys(standardVerbraucher).reduce((acc, key) => ({
-      ...acc,
-      [key]: {
-        nutzung: key === 'waschmaschine' || key === 'wäschetrockner' ? 2 :
-                 key === 'geschirrspüler' ? 7 :
-                 key === 'herd' || key === 'multimedia' || key === 'licht' ? 3 : 0,
-        zeitraeume: [{
-          id: Date.now(),
-          startzeit: 'Startzeit',
-          endzeit: 'Endzeit',
-          dauer: key === 'waschmaschine' || key === 'wäschetrockner' ? 1.37 :
-                 key === 'geschirrspüler' ? 1.27 :
-                 key === 'herd' ? 1.0 :
-                 key === 'multimedia' ? 3.0 :
-                 key === 'licht' ? 5.0 : 0
-        }]
-      },
-    }), {})
+    Object.keys(standardVerbraucher).reduce((acc, key) => {
+      let startzeit, endzeit, dauer, nutzung;
+  
+      switch (key) {
+        case 'waschmaschine':
+          startzeit = '10:00';
+          endzeit = '11:30';
+          dauer = 1.37;
+          nutzung = 2;
+          break;
+        case 'wäschetrockner':
+          startzeit = '14:00';
+          endzeit = '15:30';
+          dauer = 1.37;
+          nutzung = 2;
+          break;
+        case 'geschirrspüler':
+          startzeit = '18:00';
+          endzeit = '19:30';
+          dauer = 1.27;
+          nutzung = 7;
+          break;
+        case 'herd':
+          startzeit = '12:00';
+          endzeit = '13:00';
+          dauer = 1.0;
+          nutzung = 3;
+          break;
+        case 'multimedia':
+          startzeit = '18:00';
+          endzeit = '22:00';
+          dauer = 3.0;
+          nutzung = 3;
+          break;
+        case 'licht':
+          startzeit = '18:00';
+          endzeit = '22:00';
+          dauer = 5.0;
+          nutzung = 3;
+          break;
+        default:
+          startzeit = 'Startzeit';
+          endzeit = 'Endzeit';
+          dauer = 0;
+          nutzung = 0;
+      }
+  
+      return {
+        ...acc,
+        [key]: {
+          nutzung,
+          zeitraeume: [{
+            id: Date.now() + Math.random(),
+            startzeit,
+            endzeit,
+            dauer
+          }]
+        }
+      };
+    }, {})
   );
+  
   const [showErweiterteOptionen, setShowErweiterteOptionen] = useState(false);
   const [zusammenfassung, setZusammenfassung] = useState({
     grundlast: 0,
@@ -346,7 +389,7 @@ function App() {
     }));
     setError('');
 
-    const isDynamisch = ['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht', 'eauto'].includes(verbraucher);
+    const isDynamisch = ['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht'].includes(verbraucher);
     if (isDynamisch) {
       const kosten = berechneDynamischenVerbrauch(verbraucherDaten[verbraucher].watt, verbraucher);
       setVerbraucherDaten((prev) => ({
@@ -362,7 +405,12 @@ function App() {
       ...prev,
       [verbraucher]: {
         ...prev[verbraucher],
-        zeitraeume: [...prev[verbraucher].zeitraeume, { id: Date.now(), startzeit: 'Startzeit', endzeit: 'Endzeit', dauer: 0 }]
+        zeitraeume: [...prev[verbraucher].zeitraeume, {
+          id: Date.now() + Math.random(),
+          startzeit: '08:00',
+          endzeit: '10:00',
+          dauer: prev[verbraucher].zeitraeume[0].dauer || 0
+        }]
       }
     }));
   };
@@ -382,7 +430,7 @@ function App() {
         }
       };
     });
-    const isDynamisch = ['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht', 'eauto'].includes(verbraucher);
+    const isDynamisch = ['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht'].includes(verbraucher);
     if (isDynamisch) {
       const kosten = berechneDynamischenVerbrauch(verbraucherDaten[verbraucher].watt, verbraucher);
       setVerbraucherDaten((prev) => ({
@@ -443,6 +491,19 @@ function App() {
         for (let i = 0; i < 24; i++) {
           stunden[i] += watt / 1000;
         }
+      } else if (verbraucher === 'eauto') {
+        ladezyklen.forEach(zyklus => {
+          const startzeit = zyklus.von;
+          const endzeit = zyklus.bis;
+          if (startzeit && endzeit) {
+            let startStunde = parseInt(startzeit.split(':')[0]);
+            let endStunde = parseInt(endzeit.split(':')[0]);
+            if (endStunde < startStunde) endStunde += 24;
+            for (let i = startStunde; i <= endStunde && i < 24; i++) {
+              stunden[i % 24] += watt / 1000;
+            }
+          }
+        });
       } else {
         einstellung.zeitraeume.forEach(zeitraum => {
           const startzeit = zeitraum.startzeit;
@@ -615,7 +676,8 @@ function App() {
                           />
                         </td>
                         <td className="p-2">
-                          <span className="tooltip" aria-label={`Beschreibung für ${verbraucher}`}>
+                          <span className="tooltip" aria-label={`Beschreibung für ${verbraucher}`}
+                          >
                             ℹ️
                             <span className="tooltiptext">{verbraucherBeschreibungen[verbraucher]}</span>
                           </span>
@@ -839,7 +901,7 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht', ].map(
+                    {['waschmaschine', 'geschirrspüler', 'wäschetrockner', 'herd', 'multimedia', 'licht'].map(
                       (verbraucher) => (
                         <tr key={verbraucher} className="border-b">
                           <td className="p-2 align-top">{verbraucher.charAt(0).toUpperCase() + verbraucher.slice(1)}</td>
@@ -982,23 +1044,40 @@ function App() {
                       <td className="p-2">{verbraucherDaten[verbraucher].watt || 0} W</td>
                       <td className="p-2">{verbraucherDaten[verbraucher].kosten} €</td>
                       <td className="p-2">
-                        {erweiterteEinstellungen[verbraucher].nutzung || 0}{' '}
-                        {['herd', 'multimedia', 'licht'].includes(verbraucher) ? 'h/Tag' : 'h/Woche'}
+                        {['kühlschrank', 'gefrierschrank', 'aquarium'].includes(verbraucher)
+                          ? '24 h/Tag'
+                          : `${erweiterteEinstellungen[verbraucher].nutzung || 0} ${['herd', 'multimedia', 'licht'].includes(verbraucher) ? 'h/Tag' : 'h/Woche'}`
+                        }
                       </td>
                       <td className="p-2">
-                        {erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (
-                          <div key={zeitraum.id}>{zeitraum.startzeit || '-'}</div>
-                        ))}
+                        {verbraucher === 'eauto'
+                          ? ladezyklen.map(zyklus => (
+                              <div key={zyklus.id}>{zyklus.von || '-'}</div>
+                            ))
+                          : erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (
+                              <div key={zeitraum.id}>{zeitraum.startzeit || '-'}</div>
+                            ))
+                        }
                       </td>
                       <td className="p-2">
-                        {erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (
-                          <div key={zeitraum.id}>{zeitraum.endzeit || '-'}</div>
-                        ))}
+                        {verbraucher === 'eauto'
+                          ? ladezyklen.map(zyklus => (
+                              <div key={zyklus.id}>{zyklus.bis || '-'}</div>
+                            ))
+                          : erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (
+                              <div key={zeitraum.id}>{zeitraum.endzeit || '-'}</div>
+                            ))
+                        }
                       </td>
                       <td className="p-2">
-                        {erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (
-                          <div key={zeitraum.id}>{zeitraum.dauer || 0} h</div>
-                        ))}
+                        {verbraucher === 'eauto'
+                          ? ladezyklen.map(zyklus => (
+                              <div key={zyklus.id}>-</div>
+                            ))
+                          : erweiterteEinstellungen[verbraucher].zeitraeume.map(zeitraum => (
+                              <div key={zeitraum.id}>{zeitraum.dauer || 0} h</div>
+                            ))
+                        }
                       </td>
                       <td className="p-2">
                         {verbraucher === 'eauto' ? (
@@ -1007,16 +1086,12 @@ function App() {
                             <p>Wallbox: {eAutoDaten.wallboxKW || 0} kW</p>
                             <p>Ladefrequenz: {eAutoDaten.ladefrequenz || 0} pro Woche</p>
                             <p>Standardladung: {eAutoDaten.standardLadung ? 'Ja' : 'Nein'}</p>
-                            {ladezyklen.length > 0 && (
-                              <div>
-                                <p>Ladezyklen:</p>
-                                {ladezyklen.map((zyklus) => (
-                                  <p key={zyklus.id}>
-                                    {zyklus.von || '-'} bis {zyklus.bis || '-'}
-                                  </p>
-                                ))}
-                              </div>
-                            )}
+                            <p>Ladezyklen:</p>
+                            {ladezyklen.map((zyklus) => (
+                              <p key={zyklus.id}>
+                                {zyklus.von || '-'} bis {zyklus.bis || '-'}
+                              </p>
+                            ))}
                           </div>
                         ) : '-'}
                       </td>
