@@ -537,7 +537,7 @@ export default function MongoDBPricesPage() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>🇩🇪 Vergleich 0.6</h1>
+      <h1 style={styles.title}>🇩🇪 Vergleich 0.7</h1>
 
       <div style={styles.inputContainer}>
         <label htmlFor="verbrauchInput" style={styles.inputLabel}>
@@ -566,9 +566,9 @@ export default function MongoDBPricesPage() {
             onChange={(e) => setZeitraum(e.target.value)}
             style={styles.select}
           >
-            <option value="täglich">Täglich</option>
-            <option value="monatlich">Monatlich</option>
-            <option value="jährlich">Jährlich</option>
+            
+            <option value="monatlich">Jährlich</option>
+            
           </select>
         </div>
       </div>
