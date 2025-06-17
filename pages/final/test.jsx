@@ -32,7 +32,7 @@ const Home = () => {
 
         .top-box {
           width: 100%;
-          max-width: 2000px;
+          max-width: 3000px;
           margin: 0 auto;
           background: linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
           color: white;
@@ -239,7 +239,7 @@ const Home = () => {
 
         .footer-box {
           width: 100%;
-          max-width: 2000px;
+          max-width: 3000px;
           margin: 0 auto;
           background: linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
           color: white;
