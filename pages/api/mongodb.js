@@ -1,4 +1,3 @@
-// pages/api/mongodb.js
 import mongoose from 'mongoose';
 
 // MongoDB connection function

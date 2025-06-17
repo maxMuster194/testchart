@@ -1,5 +1,5 @@
 // models/Price.js
-import mongoose from '../lib/mongoose';
+import mongoose from '/lib/mongoose';
 
 const PriceSchema = new mongoose.Schema({
   Date: String,

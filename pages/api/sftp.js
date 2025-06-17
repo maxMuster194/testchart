@@ -3,6 +3,7 @@ import Papa from 'papaparse';
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
+import cron from 'node-cron';
 
 // MongoDB-Verbindung
 const mongoURI = 'mongodb+srv://max:Julian1705@strom.vm0dp8f.mongodb.net/?retryWrites=true&w=majority&appName=Strom';
@@ -62,22 +63,23 @@ const saveCSVFile = (data, filename) => {
   return filePath;
 };
 
-// In MongoDB speichern
-const insertToMongoDB = async (data, model) => {
+// In MongoDB speichern (bestehende Daten löschen und neue einfügen)
+const updateMongoDB = async (data, model) => {
   try {
-    await model.insertMany(data, { ordered: false }); // ordered: false für bessere Performance
-    console.log(`Daten erfolgreich in MongoDB gespeichert (${model.modelName})`);
+    // Bestehende Daten löschen
+    await model.deleteMany({});
+    // Neue Daten einfügen
+    await model.insertMany(data, { ordered: false });
+    console.log(`Daten erfolgreich in MongoDB aktualisiert (${model.modelName})`);
   } catch (err) {
-    console.error(`Fehler beim Schreiben in MongoDB (${model.modelName}):`, err);
+    console.error(`Fehler beim Aktualisieren in MongoDB (${model.modelName}):`, err);
   }
 };
 
-// API-Handler
-export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Nur GET-Anfragen erlaubt' });
-  }
-
+// Funktion zum Abrufen und Aktualisieren der Daten
+const updateData = async () => {
+  console.log('Datenaktualisierung gestartet:', new Date().toLocaleString());
+  
   const filePathGermany = '/germany/Day-Ahead Auction/Hourly/Current/Prices_Volumes/auction_spot_prices_germany_luxembourg_2025.csv';
   const filePathAustria = '/austria/Day-Ahead Auction/Hourly/Current/Prices_Volumes/auction_spot_prices_austria_2025.csv';
 
@@ -91,20 +93,40 @@ export default async function handler(req, res) {
     saveCSVFile(germanyPrices, 'germany_prices.csv');
     saveCSVFile(austriaPrices, 'austria_prices.csv');
 
-    // In MongoDB speichern
+    // In MongoDB aktualisieren
     await Promise.all([
-      insertToMongoDB(germanyPrices, GermanyPrice),
-      insertToMongoDB(austriaPrices, AustriaPrice),
+      updateMongoDB(germanyPrices, GermanyPrice),
+      updateMongoDB(austriaPrices, AustriaPrice),
     ]);
 
-    // Antwort an den Client
-    res.status(200).json({
-      message: "Daten erfolgreich verarbeitet.",
-      germany: germanyPrices,
-      austria: austriaPrices
-    });
+    console.log('Datenaktualisierung erfolgreich abgeschlossen.');
+  } catch (error) {
+    console.error('Fehler bei der Datenaktualisierung:', error);
+  }
+};
+
+// API-Handler für manuelle Auslösung
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Nur GET-Anfragen erlaubt' });
+  }
+
+  try {
+    await updateData();
+    res.status(200).json({ message: "Daten erfolgreich aktualisiert." });
   } catch (error) {
     console.error('API-Fehler:', error);
     res.status(500).json({ error: error.message });
   }
-}
+};
+
+// Cron-Job: Täglich um 14:10 Uhr die Daten aktualisieren
+cron.schedule('10 14 * * *', async () => {
+  console.log('Geplante Datenaktualisierung um 14:10 Uhr wird ausgeführt.');
+  await updateData();
+}, {
+  timezone: 'Europe/Berlin' // Zeitzone für Mitteleuropa
+});
+
+// Initiale Ausführung beim Start des Skripts
+updateData();
