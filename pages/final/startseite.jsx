@@ -9,7 +9,7 @@ const Home = () => {
 
   const menuKlick = (item) => {
     const routes = {
-      Home: '/final/test',
+      Home: '/final/startseite',
       Preis: '/final/preis',
       Rechner: '/final/rechner',
       Details: '/final/details',
@@ -486,7 +486,7 @@ const Home = () => {
       <div className="modules">
         <div className="top-box">
           <img
-            src="/bilder/lego.png"
+            src="/bilder/logo.png"
             alt="Logo"
             className="logo"
             onClick={() => menuKlick('Home')}
@@ -521,7 +521,7 @@ const Home = () => {
           <h2>
             Preisrechner dynamische Tarife
             <button className="header-button" onClick={() => menuKlick('Rechner')}>
-              <FontAwesomeIcon icon={faChartLine} className="chart-icon" />
+              <FontAwesomeIcon icon={faChartLine} className="calculation-button" />
               Zum Rechner
             </button>
           </h2>

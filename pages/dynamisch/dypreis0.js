@@ -172,7 +172,7 @@ export default function Dypreis0() {
         <h1 style={styles.title}>Aktueller Strompreis</h1>
         <div style={styles.datePickerContainer}>
           <label htmlFor="date-picker" style={styles.datePickerLabel}>
-          
+               
           </label>
           <input
             id="date-picker"

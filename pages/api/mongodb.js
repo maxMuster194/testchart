@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
-// MongoDB connection function
+// MongoDB-Verbindungsfunktion
 const connectDB = async () => {
   if (mongoose.connections[0].readyState) {
-    // Already connected
     return;
   }
   try {
@@ -18,24 +17,27 @@ const connectDB = async () => {
   }
 };
 
-// Define schema for germanyprices collection (adjust as needed)
+// Schema für germanyprices
 const GermanyPriceSchema = new mongoose.Schema({
-  date: String,
-  __parsed_extra: [String], // Adjust based on actual data structure
-  // Add other fields if present in your collection
-}, { collection: 'germanyprices' }); // Explicitly set collection name
+  deliveryday: String, // Feld für das Datum
+  __parsed_extra: [mongoose.Mixed], // Für die Preisdaten
+}, { collection: 'germanyprices', strict: false });
 
 const GermanyPrice = mongoose.models.GermanyPrice || mongoose.model('GermanyPrice', GermanyPriceSchema, 'germanyprices');
 
-// API route handler
+// API-Route-Handler
 export default async function handler(req, res) {
   try {
-    // Connect to MongoDB
     await connectDB();
 
     if (req.method === 'GET') {
-      // Query the test.germanyprices collection
-      const data = await GermanyPrice.find({}).lean();
+      const { date } = req.query; // Datum aus Query-Parametern holen
+      let query = {};
+      if (date) {
+        query = { deliveryday: date }; // Filter nach deliveryday
+      }
+
+      const data = await GermanyPrice.find(query).lean();
       if (!data || data.length === 0) {
         return res.status(404).json({ error: 'No data found in germanyprices collection' });
       }

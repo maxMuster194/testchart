@@ -2,24 +2,20 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faChartLine, faCalculator, faFileLines, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import Dypreis0 from '../dynamisch/dypreis0.js';
+import StrompreisChart from '../haushalt/Profil6';
 
 const Home = () => {
   const router = useRouter();
 
   const menuKlick = (item) => {
     const routes = {
-      Home: '/final/test',
+      Home: '/final/startseite',
       Preis: '/final/preis',
       Rechner: '/final/rechner',
       Details: '/final/details',
       Hilfe: '/final/hilfe',
     };
     router.push(routes[item] || '/');
-  };
-
-  const handleImportClick = () => {
-    alert('Import-Funktion ausgelöst!');
   };
 
   return (
@@ -39,13 +35,10 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
-          color: white;
+          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15px 30px;
-          font-size: 28px;
+          align-items: flex-start;
+          padding: 0;
           position: fixed;
           top: 0;
           left: 0;
@@ -53,25 +46,23 @@ const Home = () => {
           z-index: 1000;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
           box-sizing: border-box;
+          height: 130px;
+          pointer-events: none;
         }
 
         .logo {
-          width: 120px;
-          height: 70px;
-          margin-left: 50px;
+          width: 250px;
+          height: 95px;
+          position: absolute;
+          left: 20px;
+          top: 0;
           object-fit: contain;
           cursor: pointer;
-          position: relative;
-          top: -15px;
+          pointer-events: auto;
         }
 
         .logo:hover {
           transform: scale(1.1);
-        }
-
-        .header-text {
-          margin-right: 30px;
-          font-weight: 700;
         }
 
         .sidebar {
@@ -83,12 +74,12 @@ const Home = () => {
           flex-direction: column;
           align-items: center;
           position: fixed;
-          top: 70px;
-          height: calc(100vh - 70px);
+          top: 130px;
+          height: calc(100vh - 130px);
           left: 0;
           z-index: 998;
           box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-          margin-top: 30px;
+          margin-top: 0;
         }
 
         .sidebar .icon-container {
@@ -122,7 +113,7 @@ const Home = () => {
 
         .main-content {
           margin-left: 80px;
-          margin-top: 70px;
+          margin-top: 130px;
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -131,7 +122,7 @@ const Home = () => {
           max-width: 1200px;
           margin-left: auto;
           margin-right: auto;
-          min-height: calc(100vh - 110px);
+          min-height: calc(100vh - 170px);
         }
 
         .main-content h2 {
@@ -191,44 +182,9 @@ const Home = () => {
           box-shadow: none;
         }
 
-        .calculation-prompt {
-          background: rgba(0, 0, 0, 0.05);
-          padding: 20px;
-          border-radius: 8px;
-          margin: 20px auto;
-          max-width: 400px;
-          text-align: center;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .calculation-prompt p {
-          font-size: 16px;
-          line-height: 1.7;
-          color: #333;
-          margin: 0 0 15px 0;
-        }
-
-        .calculation-button {
-          background: rgb(3, 160, 129);
-          color: white;
-          border: none;
-          padding: 12px 30px;
-          font-size: 18px;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background 0.3s ease, transform 0.3s ease;
-          font-weight: 600;
-          display: inline-block;
-        }
-
-        .calculation-button:hover {
-          background: rgb(0, 100, 80);
-          transform: scale(1.05);
-        }
-
         .dirgam-section {
           width: 100%;
-          max-width: 500px;
+          max-width: 900px;
           background: transparent;
           padding: 30px;
           border: none;
@@ -269,27 +225,6 @@ const Home = () => {
           margin: 10px 0;
         }
 
-        .import-button {
-          background: rgb(3, 160, 129);
-          color: white;
-          border: none;
-          padding: 12px 30px;
-          font-size: 18px;
-          border-radius: 8px;
-          cursor: pointer;
-          margin-bottom: 25px;
-          transition: background 0.3s ease, transform 0.3s ease;
-          font-weight: 600;
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .import-button:hover {
-          background: rgb(0, 100, 80);
-          transform: scale(1.05);
-        }
-
         .footer-box {
           width: 100%;
           max-width: 3000px;
@@ -313,6 +248,8 @@ const Home = () => {
             margin-left: 80px;
             padding: 20px;
             flex-direction: column;
+            margin-top: 130px;
+            min-height: calc(100vh - 170px);
           }
           .section-container {
             flex-direction: column;
@@ -332,11 +269,10 @@ const Home = () => {
           .content-section h3 {
             font-size: 20px;
           }
-          .calculation-prompt {
-            max-width: 100%;
-          }
           .sidebar {
             width: 70px;
+            top: 130px;
+            height: calc(100vh - 130px);
           }
           .sidebar .icon-container .icon-label {
             font-size: 10px;
@@ -347,6 +283,16 @@ const Home = () => {
           }
           .header-button .chart-icon {
             font-size: 14px;
+          }
+          .top-box {
+            height: 130px;
+            background: url('/bilder/test.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
+          }
+          .logo {
+            width: 100px;
+            height: 58px;
+            left: 20px;
+            top: 0;
           }
         }
       `}</style>
@@ -359,7 +305,6 @@ const Home = () => {
             className="logo"
             onClick={() => menuKlick('Home')}
           />
-          <span className="header-text">Header Bild</span>
         </div>
 
         <div className="sidebar">
@@ -386,22 +331,13 @@ const Home = () => {
         </div>
 
         <div className="main-content" id="main-content">
-          <h2> Rechner </h2>
-
+          <h2>Preisrechner dynamische Tarife</h2>
           <p className="header-text"></p>
-          
+          <StrompreisChart />
           <div className="section-container">
-            <div className="content-section">
-             
-            </div>
-
-            <div className="dirgam-section">
-              
-            </div>
-          </div>
-
-          <div className="calculation-prompt">
-          
+            
+            
+            
           </div>
         </div>
 

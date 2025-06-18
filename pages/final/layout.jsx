@@ -9,7 +9,7 @@ const Home = () => {
 
   const menuKlick = (item) => {
     const routes = {
-      Home: '/final/test',
+      Home: '/final/startseite',
       Preis: '/final/preis',
       Rechner: '/final/rechner',
       Details: '/final/details',
