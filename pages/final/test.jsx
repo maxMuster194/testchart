@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faDollarSign, faCalculator, faInfoCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faChartLine, faCalculator, faFileLines, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Dypreis0 from '../dynamisch/dypreis0.js'; // Updated import with uppercase and .js extension
 
 const Home = () => {
   const menuKlick = (item, sectionId) => {
@@ -56,8 +57,8 @@ const Home = () => {
           margin-left: 50px;
           object-fit: contain;
           cursor: pointer;
-          position: relative; /* Ermöglicht Verschiebung */
-          top: -15px; /* Ändere diesen Wert für Verschiebung: z.B. -10px (nach oben), 10px (nach unten) */
+          position: relative;
+          top: -15px;
         }
 
         .logo:hover {
@@ -70,7 +71,7 @@ const Home = () => {
         }
 
         .sidebar {
-          width: 60px;
+          width: 80px;
           background-color: #ffffff;
           color: rgb(3, 160, 129);
           padding: 15px 0;
@@ -83,27 +84,45 @@ const Home = () => {
           left: 0;
           z-index: 998;
           box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+          margin-top: 30px;
         }
 
-        .sidebar div {
-          margin: 20px 0;
-          font-size: 26px;
+        .sidebar .icon-container {
+          margin: 15px 0;
           cursor: pointer;
           transition: color 0.3s ease, transform 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
-        .sidebar div:hover {
+        .sidebar .icon-container:hover {
           color: rgb(0, 100, 80);
           transform: scale(1.2);
         }
 
+        .sidebar .icon-container .icon {
+          font-size: 26px;
+          margin-bottom: 5px;
+        }
+
+        .sidebar .icon-container .icon-label {
+          font-size: 12px;
+          color: rgb(3, 160, 129);
+          transition: color 0.3s ease;
+        }
+
+        .sidebar .icon-container:hover .icon-label {
+          color: rgb(0, 100, 80);
+        }
+
         .main-content {
-          margin-left: 60px;
+          margin-left: 80px;
           margin-top: 70px;
           flex: 1;
           display: flex;
-          flex-direction: column; /* Changed to column to stack heading, sections, and prompt */
-          align-items: center; /* Center heading and prompt */
+          flex-direction: column;
+          align-items: center;
           padding: 40px 20px;
           max-width: 1200px;
           margin-left: auto;
@@ -114,22 +133,54 @@ const Home = () => {
         .main-content h2 {
           font-size: 32px;
           color: rgb(3, 160, 129);
-          margin-bottom: 30px;
+          margin-bottom: 10px;
           font-weight: 700;
           text-align: center;
         }
 
+        .header-text {
+          font-size: 16px;
+          color: #333;
+          margin-bottom: 15px;
+          text-align: center;
+        }
+
+        .header-button {
+          background: rgb(3, 160, 129);
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          font-size: 16px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.3s ease;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+        }
+
+        .header-button:hover {
+          background: rgb(0, 100, 80);
+          transform: scale(1.05);
+        }
+
+        .header-button .chart-icon {
+          font-size: 16px;
+        }
+
         .section-container {
           display: flex;
-          justify-content: space-between; /* Places content-section left, dirgam-section right */
+          justify-content: space-between;
           width: 100%;
-          max-width: 900px; /* Limits total width of sections */
+          max-width: 900px;
           margin-bottom: 20px;
         }
 
         .content-section {
           width: 100%;
-          max-width: 400px; /* Match dirgam-section width */
+          max-width: 400px;
           background: transparent;
           padding: 30px;
           border: none;
@@ -173,16 +224,14 @@ const Home = () => {
 
         .dirgam-section {
           width: 100%;
-          max-width: 400px;
-          background: #ffffff;
-          padding: 20px;
-          border-radius: 15px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-          transition: transform 0.3s ease;
-        }
-
-        .dirgam-section:hover {
-          transform: translateY(-5px);
+          max-width: 500px; /* Increased to accommodate chart */
+          background: transparent;
+          padding: 30px;
+          border: none;
+          box-shadow: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
         .dirgam-section h2 {
@@ -257,7 +306,7 @@ const Home = () => {
 
         @media (max-width: 768px) {
           .main-content {
-            margin-left: 50px;
+            margin-left: 80px;
             padding: 20px;
             flex-direction: column;
           }
@@ -270,6 +319,7 @@ const Home = () => {
             padding: 20px;
             margin-right: 0;
             margin-bottom: 20px;
+            max-width: 100%; /* Ensure full width on mobile */
           }
           .content-section h2,
           .dirgam-section h2 {
@@ -281,82 +331,104 @@ const Home = () => {
           .calculation-prompt {
             max-width: 100%;
           }
+          .sidebar {
+            width: 70px;
+          }
+          .sidebar .icon-container .icon-label {
+            font-size: 10px;
+          }
+          .header-button {
+            padding: 8px 16px;
+            font-size: 14px;
+          }
+          .header-button .chart-icon {
+            font-size: 14px;
+          }
         }
       `}</style>
 
       {/* Header */}
-      <div className="top-box">
-        <img
-          src="/bilder/logo.png"
-          alt="Logo"
-          className="logo"
-          onClick={() => menuKlick('Home', 'main-content')}
-        />
-        <span className="header-text">Header Bild</span>
-      </div>
+      <div className="modules">
+        <div className="top-box">
+          <img
+            src="/bilder/logo.png"
+            alt="Logo"
+            className="logo"
+            onClick={() => menuKlick('Home', 'main-content')}
+          />
+          <span className="header-text">Header Bild</span>
+        </div>
 
-      {/* Menüleiste links */}
-      <div className="sidebar">
-        <div onClick={() => menuKlick('Home', 'main-content')} title="Home">
-          <FontAwesomeIcon icon={faHouse} />
-        </div>
-        <div onClick={() => menuKlick('Preis')} title="Preis">
-          <FontAwesomeIcon icon={faDollarSign} />
-        </div>
-        <div onClick={() => menuKlick('Rechner')} title="Rechner">
-          <FontAwesomeIcon icon={faCalculator} />
-        </div>
-        <div onClick={() => menuKlick('Details')} title="Details">
-          <FontAwesomeIcon icon={faInfoCircle} />
-        </div>
-        <div onClick={() => menuKlick('Hilfe')} title="Hilfe">
-          <FontAwesomeIcon icon={faQuestionCircle} />
-        </div>
-      </div>
-
-      {/* Hauptinhalt */}
-      <div className="main-content" id="main-content">
-        <h2>Preisrechner dynamische Tarife</h2>
-              Jetzt in wenigen Schritten herausfinden, ob sich ein dynamischer Stromtarif für Ihren Haushalt lohnt.
-        <div className="section-container">
-          <div className="content-section">
-            
-            <h3>Was ist ein dynamischer Stromtarif?</h3>
-            <p>
-              Dynamische Stromtarife sind flexible Strompreise, die sich in Echtzeit oder stündlich an den aktuellen Börsenstrompreisen orientieren. Im Gegensatz zu festen Tarifen variiert der Preis je nach Angebot und Nachfrage – zum Beispiel ist Strom nachts oder bei viel Wind und Sonne oft günstiger.
-            </p>
-            <h3>Vorteile</h3>
-            <ul>
-              <li><strong>Kostenersparnis:</strong> Wer seinen Stromverbrauch in günstige Zeiten verlegt (z. B. Wäsche nachts waschen), kann spürbar sparen</li>
-              <li><strong>Transparenz:</strong> Nutzer sehen, wann Strom teuer oder billig ist, und können entsprechend reagieren</li>
-              <li><strong>Umweltfreundlich:</strong> Fördert die Nutzung von erneuerbaren Energien, wenn diese im Überfluss verfügbar sind</li>
-              <li><strong>Anreiz zur Automatisierung:</strong> Smarte Haushaltsgeräte oder Energiemanagementsysteme lassen sich optimal einsetzen</li>
-            </ul>
-            <h3>Nachteile</h3>
-            <ul>
-              <li><strong>Preisschwankungen:</strong> Strom kann zu bestimmten Tageszeiten sehr teuer sein, was die Planung erschwert</li>
-              <li><strong>Technischer Aufwand:</strong> Ein digitaler Stromzähler (Smart Meter) ist meist Voraussetzung</li>
-              <li><strong>Komplexität:</strong> Erfordert aktives Mitdenken oder technische Lösungen, um vom günstigen Preis zu profitieren</li>
-              <li><strong>Unvorhersehbarkeit:</strong> Bei starker Nachfrage oder Krisen können Preise unerwartet steigen</li>
-            </ul>
+        {/* Menüleiste links */}
+        <div className="sidebar">
+          <div className="icon-container" onClick={() => menuKlick('Home', 'main-content')} title="Home">
+            <FontAwesomeIcon icon={faHouse} className="icon" />
+            <span className="icon-label">Home</span>
           </div>
-
-          <div className="dirgam-section">
-            <h2>Dirgam</h2>
-            <p>Hier steht der Inhalt für die Dirgam-Box. Dieser Bereich kann mit weiteren Informationen gefüllt werden.</p>
+          <div className="icon-container" onClick={() => menuKlick('Preis')} title="Preis">
+            <FontAwesomeIcon icon={faChartLine} className="icon" />
+            <span className="icon-label">Preis</span>
+          </div>
+          <div className="icon-container" onClick={() => menuKlick('Rechner')} title="Rechner">
+            <FontAwesomeIcon icon={faCalculator} className="icon" />
+            <span className="icon-label">Rechner</span>
+          </div>
+          <div className="icon-container" onClick={() => menuKlick('Details')} title="Details">
+            <FontAwesomeIcon icon={faFileLines} className="icon" />
+            <span className="icon-label">Details</span>
+          </div>
+          <div className="icon-container" onClick={() => menuKlick('Hilfe')} title="Hilfe">
+            <FontAwesomeIcon icon={faQuestionCircle} className="icon" />
+            <span className="icon-label">Hilfe</span>
           </div>
         </div>
 
-        <div className="calculation-prompt">
-          <p><b>Jetzt berechnen, ob der dynamischer Stromtarif für Sie in Frage kommt.</b></p>
-          <button className="calculation-button" onClick={() => menuKlick('Rechner', 'main-content')}>
+        {/* Hauptinhalt */}
+        <div className="main-content" id="main-content">
+          <h2>Preisrechner dynamische Tarife <button className="header-button" onClick={() => menuKlick('Rechner', 'main-content')}>
+            <FontAwesomeIcon icon={faChartLine} className="chart-icon" />
             Zum Rechner
-          </button>
-        </div>
-      </div>
+          </button></h2>
+          <p className="header-text">Jetzt in wenigen Schritten herausfinden, ob sich ein dynamischer Stromtarif für Ihren Haushalt lohnt.</p>
+          
+          <div className="section-container">
+            <div className="content-section">
+              <h3>Was ist ein dynamischer Stromtarif?</h3>
+              <p>
+                Dynamische Stromtarife sind flexible Strompreise, die sich in Echtzeit oder stündlich an den aktuellen Börsenstrompreisen orientieren. Im Gegensatz zu festen Tarifen variiert der Preis je nach Angebot und Nachfrage – zum Beispiel ist Strom nachts oder bei viel Wind und Sonne oft günstiger.
+              </p>
+              <h3>Vorteile</h3>
+              <ul>
+                <li><strong>Kostenersparnis:</strong> Wer seinen Stromverbrauch in günstige Zeiten verlegt (z. B. Wäsche nachts waschen), kann spürbar sparen</li>
+                <li><strong>Transparenz:</strong> Nutzer sehen, wann Strom teuer oder billig ist, und können entsprechend reagieren</li>
+                <li><strong>Umweltfreundlich:</strong> Fördert die Nutzung von erneuerbaren Energien, wenn diese im Überfluss verfügbar sind</li>
+                <li><strong>Anreiz zur Automatisierung:</strong> Smarte Haushaltsgeräte oder Energiemanagementsysteme lassen sich optimal einsetzen</li>
+              </ul>
+              <h3>Nachteile</h3>
+              <ul>
+                <li><strong>Preisschwankungen:</strong> Strom kann zu bestimmten Tageszeiten sehr teuer sein, was die Planung erschwert</li>
+                <li><strong>Technischer Aufwand:</strong> Ein digitaler Stromzähler (Smart Meter) ist meist Voraussetzung</li>
+                <li><strong>Komplexität:</strong> Erfordert aktives Mitdenken oder technische Lösungen, um vom günstigen Preis zu profitieren</li>
+                <li><strong>Unvorhersehbarkeit:</strong> Bei starker Nachfrage oder Krisen können Preise unerwartet steigen</li>
+              </ul>
+            </div>
 
-      {/* Footer */}
-      <div className="footer-box">© 2025 Energie Dashboard</div>
+            <div className="dirgam-section">
+              <Dypreis0 /> {/* Updated to use uppercase Dypreis0 */}
+            </div>
+          </div>
+
+          <div className="calculation-prompt">
+            <p><b>Jetzt berechnen, ob der dynamischer Stromtarif für Sie in Frage kommt.</b></p>
+            <button className="calculation-button" onClick={() => menuKlick('Rechner', 'main-content')}>
+              Zum Rechner
+            </button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="footer-box">© 2025 Energie Dashboard</div>
+      </div>
     </>
   );
 };
