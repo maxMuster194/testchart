@@ -386,7 +386,7 @@ const Home = () => {
         </div>
 
         <div className="main-content" id="main-content">
-          <h2>Preisrechner dynamische Tarife </h2>
+          <h2>Details</h2>
 
           <p className="header-text"></p>
           

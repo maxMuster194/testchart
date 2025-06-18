@@ -1,17 +1,21 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faChartLine, faCalculator, faFileLines, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import Dypreis0 from '../dynamisch/dypreis0.js'; // Updated import with uppercase and .js extension
+import Dypreis0 from '../dynamisch/dypreis0.js';
 
 const Home = () => {
-  const menuKlick = (item, sectionId) => {
-    alert(`Du hast ${item} im Menü geklickt!`);
-    if (sectionId) {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
+  const router = useRouter();
+
+  const menuKlick = (item) => {
+    const routes = {
+      Home: '/final/test',
+      Preis: '/final/preis',
+      Rechner: '/final/rechner',
+      Details: '/final/details',
+      Hilfe: '/final/hilfe',
+    };
+    router.push(routes[item] || '/');
   };
 
   const handleImportClick = () => {
@@ -224,7 +228,7 @@ const Home = () => {
 
         .dirgam-section {
           width: 100%;
-          max-width: 500px; /* Increased to accommodate chart */
+          max-width: 500px;
           background: transparent;
           padding: 30px;
           border: none;
@@ -319,7 +323,7 @@ const Home = () => {
             padding: 20px;
             margin-right: 0;
             margin-bottom: 20px;
-            max-width: 100%; /* Ensure full width on mobile */
+            max-width: 100%;
           }
           .content-section h2,
           .dirgam-section h2 {
@@ -347,21 +351,19 @@ const Home = () => {
         }
       `}</style>
 
-      {/* Header */}
       <div className="modules">
         <div className="top-box">
           <img
             src="/bilder/logo.png"
             alt="Logo"
             className="logo"
-            onClick={() => menuKlick('Home', 'main-content')}
+            onClick={() => menuKlick('Home')}
           />
           <span className="header-text">Header Bild</span>
         </div>
 
-        {/* Menüleiste links */}
         <div className="sidebar">
-          <div className="icon-container" onClick={() => menuKlick('Home', 'main-content')} title="Home">
+          <div className="icon-container" onClick={() => menuKlick('Home')} title="Home">
             <FontAwesomeIcon icon={faHouse} className="icon" />
             <span className="icon-label">Home</span>
           </div>
@@ -383,9 +385,8 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Hauptinhalt */}
         <div className="main-content" id="main-content">
-          <h2>Preisrechner dynamische Tarife <button className="header-button" onClick={() => menuKlick('Rechner', 'main-content')}>
+          <h2>Preisrechner dynamische Tarife <button className="header-button" onClick={() => menuKlick('Rechner')}>
             <FontAwesomeIcon icon={faChartLine} className="chart-icon" />
             Zum Rechner
           </button></h2>
@@ -414,19 +415,18 @@ const Home = () => {
             </div>
 
             <div className="dirgam-section">
-              <Dypreis0 /> {/* Updated to use uppercase Dypreis0 */}
+              <Dypreis0 />
             </div>
           </div>
 
           <div className="calculation-prompt">
             <p><b>Jetzt berechnen, ob der dynamischer Stromtarif für Sie in Frage kommt.</b></p>
-            <button className="calculation-button" onClick={() => menuKlick('Rechner', 'main-content')}>
+            <button className="calculation-button" onClick={() => menuKlick('Rechner')}>
               Zum Rechner
             </button>
           </div>
         </div>
 
-        {/* Footer */}
         <div className="footer-box">© 2025 Energie Dashboard</div>
       </div>
     </>
