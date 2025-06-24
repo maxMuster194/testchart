@@ -9,11 +9,11 @@ const Home = () => {
 
   const menuKlick = (item) => {
     const routes = {
-      Home: '/final/startseite',
-      Preis: '/final/preis',
-      Rechner: '/final/rechner',
-      Details: '/final/details',
-      Hilfe: '/final/hilfe',
+      Home: '/Amberg/startseite',
+      Preis: '/Amberg/preis',
+      Rechner: '/Amberg/rechner',
+      Details: '/Amberg/details',
+      Hilfe: '/Amberg/hilfe',
     };
     router.push(routes[item] || '/');
   };
@@ -35,7 +35,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
+          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(67,114,183), rgb(144,95,164));
           display: flex;
           align-items: flex-start;
           padding: 0;
@@ -68,7 +68,7 @@ const Home = () => {
         .sidebar {
           width: 80px;
           background-color: #ffffff;
-          color: rgb(3, 160, 129);
+          color: rgb(67,114,183);
           padding: 15px 0;
           display: flex;
           flex-direction: column;
@@ -92,7 +92,7 @@ const Home = () => {
         }
 
         .sidebar .icon-container:hover {
-          color: rgb(0, 100, 80);
+          color: rgb(67,114,183);
           transform: scale(1.2);
         }
 
@@ -103,12 +103,12 @@ const Home = () => {
 
         .sidebar .icon-container .icon-label {
           font-size: 12px;
-          color: rgb(3, 160, 129);
+          color: rgb(67,114,183);
           transition: color 0.3s ease;
         }
 
         .sidebar .icon-container:hover .icon-label {
-          color: rgb(0, 100, 80);
+          color: rgb(67,114,183);
         }
 
         .main-content {
@@ -127,7 +127,7 @@ const Home = () => {
 
         .main-content h2 {
           font-size: 32px;
-          color: rgb(3, 160, 129);
+          color: rgb(67,114,183);
           margin-bottom: 10px;
           font-weight: 700;
           text-align: center;
@@ -156,7 +156,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
+          background: linear-gradient(90deg, rgb(67,114,183), rgb(144,95,164));
           color: white;
           text-align: center;
           padding: 20px;
@@ -216,7 +216,7 @@ const Home = () => {
       <div className="modules">
         <div className="top-box">
           <img
-            src="/bilder/logo.png"
+            src="/bilder/AmStrom.jpg"
             alt="Logo"
             className="logo"
             onClick={() => menuKlick('Home')}

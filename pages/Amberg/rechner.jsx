@@ -11,11 +11,11 @@ const Home = () => {
 
   const menuKlick = (item) => {
     const routes = {
-      Home: '/final/startseite',
-      Preis: '/final/preis',
-      Rechner: '/final/rechner',
-      Details: '/final/details',
-      Hilfe: '/final/hilfe',
+      Home: '/Amberg/startseite',
+      Preis: '/Amberg/preis',
+      Rechner: '/Amberg/rechner',
+      Details: '/Amberg/details',
+      Hilfe: '/Amberg/hilfe',
     };
     router.push(routes[item] || '/');
     setIsSidebarOpen(false); // Close sidebar on menu click
@@ -43,7 +43,7 @@ const Home = () => {
           width: 100%;
           max-width: 100%;
           margin: 0 auto;
-          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
+          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(67,114,183), rgb(144,95,164));
           display: flex;
           align-items: flex-start;
           padding: 0;
@@ -74,21 +74,12 @@ const Home = () => {
           transform: scale(1.05);
         }
 
-        .hamburger {
-          display: none;
-          font-size: 24px;
-          color: white;
-          position: absolute;
-          right: 15px;
-          top: 35px;
-          cursor: pointer;
-          pointer-events: auto;
-        }
+        
 
         .sidebar {
           width: 80px;
           background-color: #ffffff;
-          color: rgb(3, 160, 129);
+          color: rgb(7, 39, 87);
           padding: 15px 0;
           display: flex;
           flex-direction: column;
@@ -112,7 +103,7 @@ const Home = () => {
         }
 
         .sidebar .icon-container:hover {
-          color: rgb(0, 100, 80);
+          color: rgb(67,114,183);
           transform: scale(1.1);
         }
 
@@ -123,12 +114,12 @@ const Home = () => {
 
         .sidebar .icon-container .icon-label {
           font-size: 12px;
-          color: rgb(3, 160, 129);
+          color: rgb(67,114,183);
           transition: color 0.3s ease;
         }
 
         .sidebar .icon-container:hover .icon-label {
-          color: rgb(0, 100, 80);
+          color: rgb(67,114,183);
         }
 
         .main-content {
@@ -149,7 +140,7 @@ const Home = () => {
 
         .main-content h2 {
           font-size: 2rem;
-          color: rgb(3, 160, 129);
+          color: rgb(67,114,183);
           margin-bottom: 10px;
           font-weight: 700;
           text-align: center;
@@ -163,7 +154,7 @@ const Home = () => {
         }
 
         .header-button {
-          background: rgb(3, 160, 129);
+          background: rgb(67,114,183);
           color: white;
           border: none;
           padding: 10px 20px;
@@ -179,7 +170,7 @@ const Home = () => {
         }
 
         .header-button:hover {
-          background: rgb(0, 100, 80);
+          background: rgb(67,114,183);
           transform: scale(1.05);
         }
 
@@ -220,7 +211,7 @@ const Home = () => {
 
         .dirgam-section h2 {
           font-size: 2rem;
-          color: rgb(3, 160, 129);
+          color: rgb(67,114,183);
           margin-bottom: 20px;
           font-weight: 700;
           text-align: center;
@@ -253,7 +244,7 @@ const Home = () => {
           width: 100%;
           max-width: 100%;
           margin: 0 auto;
-          background: linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
+          background: linear-gradient(90deg, rgb(67,114,183), rgb(144,95,164));
           color: white;
           text-align: center;
           padding: 15px;
@@ -323,9 +314,7 @@ const Home = () => {
             top: 10px;
           }
 
-          .hamburger {
-            display: block;
-          }
+          
 
           .sidebar {
             width: 200px;
@@ -413,11 +402,7 @@ const Home = () => {
             top: 6px;
           }
 
-          .hamburger {
-            font-size: 20px;
-            top: 20px;
-            right: 10px;
-          }
+         
 
           .sidebar {
             width: 180px;
@@ -506,7 +491,7 @@ const Home = () => {
             className="logo"
             onClick={() => menuKlick('Home')}
           />
-          <FontAwesomeIcon icon={faBars} className="hamburger" onClick={toggleSidebar} />
+          
         </div>
 
         <div className="sidebar">

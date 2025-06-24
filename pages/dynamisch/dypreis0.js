@@ -23,7 +23,7 @@ const styles = {
   title: {
     fontSize: '1.5rem',
     fontWeight: '700',
-    color: 'rgb(3, 160, 129)',
+    color: 'rgb(68,114,183)',
   },
   datePickerContainer: {
     display: 'flex',
@@ -198,8 +198,8 @@ export default function Dypreis0() {
                   label: `Strompreise am ${selectedDate || 'N/A'} (in Cent/kWh)`,
                   data: chartConvertedValues,
                   fill: false,
-                  borderColor: 'rgb(3, 160, 129)',
-                  backgroundColor: 'rgb(3, 160, 129)',
+                  borderColor: 'rgb(68,114,183)',
+                  backgroundColor: 'rgb(68,114,183)',
                   tension: 0.3,
                   pointRadius: 4,
                   pointHoverRadius: 6,

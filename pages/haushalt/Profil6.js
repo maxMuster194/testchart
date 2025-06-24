@@ -149,6 +149,7 @@ const styles = {
     fontWeight: '600',
     marginBottom: '12px',
     textAlign: 'center',
+    color: 'rgb(67,114,183)'
   },
   summaryTable: {
     width: '100%',
@@ -156,7 +157,7 @@ const styles = {
     fontSize: '14px',
   },
   summaryTableHeader: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'rgb(67,114,183)',
     fontWeight: '600',
     padding: '8px',
     borderBottom: '1px solid #ccc',
@@ -179,7 +180,7 @@ const styles = {
     width: '16px',
     height: '16px',
     cursor: 'pointer',
-    color: 'rgb(3, 160, 129)',
+    color: 'rgb(67,114,183)',
   },
   noteText: {
     fontSize: '12px',
@@ -420,7 +421,7 @@ export default function StrompreisChart() {
           {
             label: `Dynamischer Tarif (Profil ${profile}, Faktor ${factor})`,
             data: h0AdjustedValues,
-            borderColor: 'rgb(3, 160, 129)',
+            borderColor: 'rgb( 67,114,183)',
             backgroundColor: 'rgba(3, 160, 129, 0.1)',
             fill: false,
             tension: 0.4,
@@ -430,7 +431,7 @@ export default function StrompreisChart() {
           {
             label: `Normaltarif (${customPrice || 'N/A'} Cent/kWh, Profil ${profile}, Faktor ${factor})`,
             data: customPriceValues,
-            borderColor: '#FB8C00',
+            borderColor: 'rgb(144,95,164)',
             backgroundColor: 'rgba(251, 140, 0, 0.1)',
             fill: false,
             tension: 0.4,
@@ -444,7 +445,7 @@ export default function StrompreisChart() {
           {
             label: `Dynamischer Tarif (Profil ${profile}, Faktor ${factor})`,
             data: h0PVAdjustedValues,
-            borderColor: 'rgb(3, 160, 129)',
+            borderColor: 'rgb(67,114,183)',
             backgroundColor: 'rgba(3, 160, 129, 0.1)',
             fill: false,
             tension: 0.4,
@@ -454,7 +455,7 @@ export default function StrompreisChart() {
           {
             label: `Normaltarif (${customPrice || 'N/A'} Cent/kWh, Profil ${profile}, Faktor ${factor})`,
             data: customH0PVPriceValues,
-            borderColor: '#FB8C00',
+            borderColor: 'rgb(144,95,164)',
             backgroundColor: 'rgba(251, 140, 0, 0.1)',
             fill: false,
             tension: 0.4,
@@ -535,7 +536,7 @@ export default function StrompreisChart() {
           }
           .date-picker:focus {
             outline: none;
-            border-color: rgb(3, 160, 129);
+            border-color: rgb(67,114,183);
             box-shadow: 0 0 0 3px rgba(3, 160, 129, 0.1);
           }
           .price-input, .plz-input {
@@ -549,7 +550,7 @@ export default function StrompreisChart() {
           }
           .price-input:focus, .plz-input:focus {
             outline: none;
-            border-color: rgb(3, 160, 129);
+            border-color: rgb(67,114,183);
             box-shadow: 0 0 0 3px rgba(3, 160, 129, 0.1);
           }
           .input-error {
@@ -570,24 +571,24 @@ export default function StrompreisChart() {
             -webkit-appearance: none;
             width: 20px;
             height: 20px;
-            background: rgb(3, 160, 129);
+            background: rgb(67,114,183);
             border-radius: 50%;
             cursor: pointer;
             transition: background 0.2s ease;
           }
           .slider::-webkit-slider-thumb:hover {
-            background: rgb(2, 128, 103);
+            background: rgb(67,114,183);
           }
           .slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
-            background: rgb(3, 160, 129);
+            background: rgb(67,114,183);
             border-radius: 50%;
             cursor: pointer;
             transition: background 0.2s ease;
           }
           .slider::-moz-range-thumb:hover {
-            background: rgb(2, 128, 103);
+            background: rgb(67,114,183);
           }
           .radio-input {
             -webkit-appearance: none;
@@ -602,7 +603,7 @@ export default function StrompreisChart() {
             transition: border-color 0.2s ease, background-color 0.2s ease;
           }
           .radio-input:checked {
-            border-color: rgb(3, 160, 129);
+            border-color: rgb(67,114,183);
             background-color: #fff;
           }
           .radio-input:checked::before {
@@ -613,14 +614,14 @@ export default function StrompreisChart() {
             transform: translate(-50%, -50%);
             width: 8px;
             height: 8px;
-            background-color: rgb(3, 160, 129);
+            background-color: rgb(67,114,183);
             border-radius: 50%;
           }
           .radio-input:hover {
-            border-color: rgb(2, 128, 103);
+            border-color: rgb(67,114,183);
           }
           .radio-input:checked:hover::before {
-            background-color: rgb(2, 128, 103);
+            background-color: rgb(67,114,183);
           }
           .tooltip {
             position: absolute;
@@ -789,11 +790,11 @@ export default function StrompreisChart() {
         <h2 style={styles.chartTitle}>Vergleich Normaltarif zu dynamischem Tarif</h2>
         <div style={styles.legendContainer}>
           <div style={styles.legendItem}>
-            <div style={{ ...styles.legendColor, backgroundColor: 'rgb(3, 160, 129)' }} />
+            <div style={{ ...styles.legendColor, backgroundColor: 'rgb(67,114,183)' }} />
             <span style={styles.legendLabel}>Dynamischer Tarif</span>
           </div>
           <div style={styles.legendItem}>
-            <div style={{ ...styles.legendColor, backgroundColor: '#FB8C00' }} />
+            <div style={{ ...styles.legendColor, backgroundColor: 'rgb(144,95,164)' }} />
             <span style={styles.legendLabel}>Normaltarif</span>
           </div>
         </div>
