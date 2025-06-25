@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -517,7 +518,7 @@ const StromverbrauchRechner = () => {
   };
 
   const handleStrompreisChange = (value) => {
-    const newStrompreis = parseFloat(value) || 0.30;
+    const newStrompreis = parseFloat(value) || 0;
     if (newStrompreis < 0) {
       setError('Strompreis darf nicht negativ sein.');
       return;
@@ -644,8 +645,21 @@ const StromverbrauchRechner = () => {
     updateZusammenfassung(verbraucherDaten, setZusammenfassung);
   }, [verbraucherDaten, erweiterteEinstellungen]);
 
-  // Chart data for hourly consumption (kW)
+  // Chart data for hourly consumption (kW) and dynamic price
   const hourlyData = berechneStundenVerbrauch(verbraucherDaten, erweiterteEinstellungen);
+  const selectedIndex = apiData.findIndex((entry) => {
+    const dateKey = Object.keys(entry).find((key) => key.includes('Prices - EPEX'));
+    return dateKey && entry[dateKey] === selectedDate;
+  });
+  const labelsAll = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+  const rawValuesAll = selectedIndex !== -1 ? apiData[selectedIndex]?.__parsed_extra?.slice(0, 24) : [];
+  const chartDataApi = labelsAll
+    .map((label, i) => ({ label: label, value: rawValuesAll[i], index: i }))
+    .filter((entry) => entry.value != null);
+  const chartConvertedValues = chartDataApi.map((entry) => 
+    typeof entry.value === 'number' ? entry.value * 0.1 / 100 : parseFloat(entry.value) * 0.1 / 100 || strompreis
+  );
+
   const chartData = {
     labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
     datasets: [
@@ -656,19 +670,33 @@ const StromverbrauchRechner = () => {
         borderColor: '#4372b7',
         backgroundColor: '#4372b7',
         tension: 0.1,
+        yAxisID: 'y',
+      },
+      {
+        label: `Dynamischer Preis am ${selectedDate || 'N/A'} (€/kWh)`,
+        data: chartConvertedValues,
+        fill: false,
+        borderColor: '#905fa4',
+        backgroundColor: '#905fa4',
+        tension: 0.1,
+        yAxisID: 'y1',
       },
     ],
   };
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { position: 'top', labels: { color: '#333' } },
-      title: { display: true, text: 'Stündlicher Stromverbrauch (kW)', color: '#333', font: { size: 20 } },
+      title: { display: true, text: 'Stündlicher Stromverbrauch und Preis', color: '#333', font: { size: 16 } },
       tooltip: {
         callbacks: {
           label: function(context) {
             const index = context.dataIndex;
+            if (context.dataset.label.includes('Dynamischer Preis')) {
+              return `Preis: ${context.raw.toFixed(2)} €/kWh`;
+            }
             const verbraucherList = hourlyData[index].verbraucher.join(', ');
             return `Verbrauch: ${context.raw} kW\nAktive Verbraucher: ${verbraucherList || 'Keine'}`;
           },
@@ -676,26 +704,24 @@ const StromverbrauchRechner = () => {
       },
     },
     scales: {
-      y: { beginAtZero: true, title: { display: true, text: 'Verbrauch (kW)', color: '#333' }, ticks: { color: '#333' } },
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Verbrauch (kW)', color: '#333' },
+        ticks: { color: '#333' },
+        position: 'left',
+      },
+      y1: {
+        beginAtZero: true,
+        title: { display: true, text: 'Preis (€/kWh)', color: '#333' },
+        ticks: { color: '#333' },
+        position: 'right',
+        grid: { drawOnChartArea: false },
+      },
       x: { title: { display: true, text: 'Uhrzeit', color: '#333' }, ticks: { color: '#333' } },
     },
   };
 
   // Chart data for hourly costs with dynamic and fixed prices
-  const selectedIndex = apiData.findIndex((entry) => {
-    const dateKey = Object.keys(entry).find((key) => key.includes('Prices - EPEX'));
-    return dateKey && entry[dateKey] === selectedDate;
-  });
-
-  const labelsAll = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-  const rawValuesAll = selectedIndex !== -1 ? apiData[selectedIndex]?.__parsed_extra?.slice(0, 24) : [];
-  const chartDataApi = labelsAll
-    .map((label, i) => ({ label: label, value: rawValuesAll[i], index: i }))
-    .filter((entry) => entry.value != null);
-  const chartConvertedValues = chartDataApi.map((entry) => 
-    typeof entry.value === 'number' ? entry.value * 0.1 / 100 : parseFloat(entry.value) * 0.1 / 100 || null
-  );
-
   const chartDataKosten = {
     labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
     datasets: [
@@ -723,13 +749,14 @@ const StromverbrauchRechner = () => {
 
   const chartOptionsKosten = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { position: 'top', labels: { color: '#333' } },
       title: { 
         display: true, 
         text: `Stündliche Stromkosten (${selectedDate || 'Fallback-Preis'})`, 
         color: '#333', 
-        font: { size: 20 } 
+        font: { size: 16 } 
       },
       tooltip: {
         callbacks: {
@@ -952,6 +979,15 @@ const StromverbrauchRechner = () => {
           text-align: center;
           flex: 0.8;
           cursor: pointer;
+          padding: 6px 12px;
+          background-color: #4372b7;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          transition: background-color 0.3s;
+        }
+        .settings-field:hover {
+          background-color: #5a8cd0;
         }
         .settings-field::before {
           content: '⚙️';
@@ -959,7 +995,6 @@ const StromverbrauchRechner = () => {
           width: 20px;
           height: 20px;
           line-height: 20px;
-          color: #905fa4;
           font-size: 16px;
           text-align: center;
           vertical-align: middle;
@@ -1180,6 +1215,12 @@ const StromverbrauchRechner = () => {
           text-align: center;
           padding: 1px;
         }
+        .chart-container {
+          width: 100%;
+          max-width: 800px;
+          height: 300px;
+          margin: 0 auto;
+        }
       `}</style>
       <div className="container">
         <h1 className="text-4xl font-extrabold text-center text-[#333] mb-12">Stromverbrauch Rechner</h1>
@@ -1198,7 +1239,8 @@ const StromverbrauchRechner = () => {
             type="number"
             id="strompreis"
             value={strompreis}
-            
+            step="0.01"
+            min="0"
             onChange={(e) => handleStrompreisChange(e.target.value)}
             placeholder="z.B. 0.30"
             aria-label="Fallback Strompreis in € pro kWh"
@@ -1285,7 +1327,7 @@ const StromverbrauchRechner = () => {
                           className="settings-field"
                           aria-label={`Erweiterte Einstellungen für ${option.name} öffnen`}
                         >
-                          <span className=""></span>
+                          <span></span>
                         </button>
                       )}
                       {(menu.id === 'grundlastverbraucher' || menu.id === 'dynamischeverbraucher') && (
@@ -1499,14 +1541,18 @@ const StromverbrauchRechner = () => {
         <div className="menu">
           <h3 className="menu-header">Stromverbrauch pro Stunde</h3>
           <div className="menu-content">
-            <Line data={chartData} options={chartOptions} />
+            <div className="chart-container">
+              <Line data={chartData} options={chartOptions} />
+            </div>
           </div>
         </div>
 
         <div className="menu">
           <h3 className="menu-header">Stromkosten pro Stunde</h3>
           <div className="menu-content">
-            <Line data={chartDataKosten} options={chartOptionsKosten} />
+            <div className="chart-container">
+              <Line data={chartDataKosten} options={chartOptionsKosten} />
+            </div>
           </div>
         </div>
       </div>

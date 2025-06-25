@@ -486,7 +486,7 @@ const Home = () => {
       <div className="modules">
         <div className="top-box">
           <img
-            src="/bilder/logo.png"
+            src="/bilder/AmStrom.jpg"
             alt="Logo"
             className="logo"
             onClick={() => menuKlick('Home')}

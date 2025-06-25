@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faChartLine, faCalculator, faFileLines, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import StromverbrauchRechner from '../details/details10';
+import StromverbrauchRechner from '../details/details14';
 
 const Home = () => {
   const router = useRouter();
@@ -114,6 +114,7 @@ const Home = () => {
         .main-content {
           margin-left: 80px;
           margin-top: 130px;
+          margin-right:80px;
           flex: 1;
           display: flex;
           flex-direction: column;
