@@ -2,20 +2,24 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faChartLine, faCalculator, faFileLines, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import StromverbrauchRechner from '../details/details15';
+import StromverbrauchRechner from '../details/details14';
 
 const Home = () => {
   const router = useRouter();
 
   const menuKlick = (item) => {
     const routes = {
-      Home: '/Amberg/startseite',
-      Preis: '/Amberg/preis',
-      Rechner: '/Amberg/rechner',
-      Details: '/Amberg/details',
-      Hilfe: '/Amberg/hilfe',
+      Home: '/final/startseite',
+      Preis: '/final/preis',
+      Rechner: '/final/rechner',
+      Details: '/final/details',
+      Hilfe: '/final/hilfe',
     };
     router.push(routes[item] || '/');
+  };
+
+  const handleImportClick = () => {
+    alert('Import-Funktion ausgelöst!');
   };
 
   return (
@@ -35,7 +39,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(67,114,183), rgb(144,95,164));
+          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
           display: flex;
           align-items: flex-start;
           padding: 0;
@@ -68,7 +72,7 @@ const Home = () => {
         .sidebar {
           width: 80px;
           background-color: #ffffff;
-          color: rgb(67,114,183);
+          color: rgb(3, 160, 129);
           padding: 15px 0;
           display: flex;
           flex-direction: column;
@@ -92,7 +96,7 @@ const Home = () => {
         }
 
         .sidebar .icon-container:hover {
-          color: rgb(67,114,183);
+          color: rgb(0, 100, 80);
           transform: scale(1.2);
         }
 
@@ -103,28 +107,31 @@ const Home = () => {
 
         .sidebar .icon-container .icon-label {
           font-size: 12px;
-          color: rgb(67,114,183);
+          color: rgb(3, 160, 129);
           transition: color 0.3s ease;
         }
 
         .sidebar .icon-container:hover .icon-label {
-          color: rgb(67,114,183);
+          color: rgb(0, 100, 80);
         }
 
         .main-content {
-          margin-left: 110px; /* 80px Sidebar + 30px Abstand */
+          margin-left: 80px;
           margin-top: 130px;
-          margin-right: 20px;
           flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
           padding: 40px 20px;
-          max-width: calc(100vw - 130px); /* Angepasst für margin-left */
+          max-width: 1200px;
+          margin-left: auto;
+          margin-right: auto;
           min-height: calc(100vh - 170px);
-          box-sizing: border-box;
         }
 
         .main-content h2 {
           font-size: 32px;
-          color: rgb(67,114,183);
+          color: rgb(3, 160, 129);
           margin-bottom: 10px;
           font-weight: 700;
           text-align: center;
@@ -137,137 +144,218 @@ const Home = () => {
           text-align: center;
         }
 
-        .content-section {
-          position: absolute; /* Absolute Positionierung */
-          top: 150px; /* Unterhalb der top-box (130px) + etwas Abstand */
-          left: 50%; /* Horizontale Zentrierung */
-          transform: translateX(-50%); /* Zentriert die Mitte des Elements */
+        .header-button {
+          background: rgb(3, 160, 129);
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          font-size: 16px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.3s ease;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+        }
+
+        .header-button:hover {
+          background: rgb(0, 100, 80);
+          transform: scale(1.05);
+        }
+
+        .header-button .chart-icon {
+          font-size: 16px;
+        }
+
+        .section-container {
+          display: flex;
+          justify-content: space-between;
           width: 100%;
-          max-width: 600px; /* Beibehaltene Breite */
+          max-width: 900px;
+          margin-bottom: 20px;
+        }
+
+        .content-section {
+          width: 100%;
+          max-width: 400px;
           background: transparent;
-          padding: 15px;
+          padding: 30px;
           border: none;
           box-shadow: none;
-          box-sizing: border-box;
-          z-index: 997; /* Unter top-box und sidebar, über footer */
+        }
+
+        .calculation-prompt {
+          background: rgba(0, 0, 0, 0.05);
+          padding: 20px;
+          border-radius: 8px;
+          margin: 20px auto;
+          max-width: 400px;
+          text-align: center;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculation-prompt p {
+          font-size: 16px;
+          line-height: 1.7;
+          color: #333;
+          margin: 0 0 15px 0;
+        }
+
+        .calculation-button {
+          background: rgb(3, 160, 129);
+          color: white;
+          border: none;
+          padding: 12px 30px;
+          font-size: 18px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.3s ease;
+          font-weight: 600;
+          display: inline-block;
+        }
+
+        .calculation-button:hover {
+          background: rgb(0, 100, 80);
+          transform: scale(1.05);
+        }
+
+        .dirgam-section {
+          width: 100%;
+          max-width: 500px;
+          background: transparent;
+          padding: 30px;
+          border: none;
+          box-shadow: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .dirgam-section h2 {
+          font-size: 32px;
+          color: rgb(3, 160, 129);
+          margin-bottom: 20px;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .content-section h3 {
+          font-size: 22px;
+          color: #333;
+          margin: 20px 0 10px;
+          font-weight: 600;
+        }
+
+        .content-section p {
+          font-size: 16px;
+          line-height: 1.7;
+          color: #555;
+          margin: 10px 0;
+        }
+
+        .content-section ul {
+          list-style-type: disc;
+          padding-left: 25px;
+          font-size: 16px;
+          line-height: 1.7;
+          color: #555;
+          margin: 10px 0;
+        }
+
+        .import-button {
+          background: rgb(3, 160, 129);
+          color: white;
+          border: none;
+          padding: 12px 30px;
+          font-size: 18px;
+          border-radius: 8px;
+          cursor: pointer;
+          margin-bottom: 25px;
+          transition: background 0.3s ease, transform 0.3s ease;
+          font-weight: 600;
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .import-button:hover {
+          background: rgb(0, 100, 80);
+          transform: scale(1.05);
         }
 
         .footer-box {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: linear-gradient(90deg, rgb(67,114,183), rgb(144,95,164));
+          background: linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
           color: white;
           text-align: center;
           padding: 20px;
-          font-size: 20px;
+          font-size: 18px;
           position: fixed;
           bottom: 0;
           left: 0;
-          right: auto;
+          right: 0;
           z-index: 999;
-          box-shadow: 0 -2px 5px rgba(0, 2, 0, 2);
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
           box-sizing: border-box;
-        }
-
-        @media (max-width: 1280px) {
-          .main-content {
-            margin-left: 100px; /* 70px Sidebar + 30px Abstand */
-            margin-right: 10px;
-            padding: 20px 10px;
-            max-width: calc(100vw - 110px);
-          }
-
-          .content-section {
-            max-width: 500px;
-            padding: 8px;
-            top: 140px; /* Angepasst für kleinere Bildschirme */
-            left: 50%;
-            transform: translateX(-50%);
-          }
-
-          .sidebar {
-            width: 70px;
-          }
-        }
-
-        @media (max-width: 1024px) {
-          .main-content {
-            margin-left: 100px; /* 70px Sidebar + 30px Abstand */
-            margin-right: 10px;
-            padding-bottom: 20px;
-            max-width: calc(100vw - 110px);
-          }
-          .content-section {
-            max-width: 500px;
-            padding: 10px;
-            top: 140px;
-            left: 50%;
-            transform: translateX(-50%);
-          }
         }
 
         @media (max-width: 768px) {
           .main-content {
-            margin-left: 100px; /* 70px Sidebar + 30px Abstand */
-            margin-right: 10px;
-            padding: 15px 10px;
-            max-width: calc(100vw - 110px);
+            margin-left: 80px;
+            padding: 20px;
+            flex-direction: column;
+            margin-top: 130px;
+            min-height: calc(100vh - 170px);
           }
-
-          .content-section {
-            max-width: 500px;
-            padding: 8px;
-            top: 140px;
-            left: 50%;
-            transform: translateX(-50%);
+          .section-container {
+            flex-direction: column;
+            align-items: center;
           }
-
-          .content-section h2 {
+          .content-section,
+          .dirgam-section {
+            padding: 20px;
+            margin-right: 0;
+            margin-bottom: 20px;
+            max-width: 100%;
+          }
+          .content-section h2,
+          .dirgam-section h2 {
             font-size: 28px;
           }
-
+          .content-section h3 {
+            font-size: 20px;
+          }
+          .calculation-prompt {
+            max-width: 100%;
+          }
           .sidebar {
             width: 70px;
             top: 130px;
             height: calc(100vh - 130px);
           }
-
           .sidebar .icon-container .icon-label {
             font-size: 10px;
           }
-
+          .header-button {
+            padding: 8px 16px;
+            font-size: 14px;
+          }
+          .header-button .chart-icon {
+            font-size: 14px;
+          }
           .top-box {
             height: 130px;
             background: url('/bilder/test.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(3, 160, 129), rgb(0, 200, 150));
           }
-
           .logo {
             width: 100px;
-            height: 98px;
+            height: 58px;
             left: 20px;
             top: 0;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .main-content {
-            margin-left: 100px; /* 70px Sidebar + 30px Abstand */
-            margin-right: 5px;
-            padding: 10px 5px;
-            max-width: calc(100vw - 105px);
-          }
-
-          .content-section {
-            max-width: 90%;
-            padding: 6px;
-            top: 140px;
-            left: 50%;
-            transform: translateX(-50%);
-          }
-
-          .main-content h2 {
-            font-size: 24px;
           }
         }
       `}</style>
@@ -275,7 +363,7 @@ const Home = () => {
       <div className="modules">
         <div className="top-box">
           <img
-            src="/bilder/AmStrom.jpg"
+            src="/bilder/logo.png"
             alt="Logo"
             className="logo"
             onClick={() => menuKlick('Home')}
@@ -306,11 +394,10 @@ const Home = () => {
         </div>
 
         <div className="main-content" id="main-content">
-          <h2></h2>
-          <p className="header-text"></p>
-          <div className="content-section">
-            <StromverbrauchRechner />
-          </div>
+          <h2>Preisrechner dynamischer Tarife</h2>
+          
+         
+          <div className="calculation-prompt"><StromverbrauchRechner /></div>
         </div>
 
         <div className="footer-box">© 2025 Energie Dashboard</div>
