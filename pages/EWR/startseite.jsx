@@ -39,7 +39,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(217,4,61), rgb(217,4,61));
           display: flex;
           align-items: flex-start;
           padding: 0;
@@ -154,7 +154,7 @@ const Home = () => {
         }
 
         .header-button {
-          background: linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: linear-gradient(90deg, rgb(5,166,150), rgb(5,166,150));
           color: white;
           border: none;
           padding: 12px 24px;
@@ -170,7 +170,7 @@ const Home = () => {
         }
 
         .header-button:hover {
-           background: linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+           background: linear-gradient(90deg, rgb(5,166,150), rgb(5,166,150));
           transform: scale(1.05);
         }
 
@@ -254,7 +254,7 @@ const Home = () => {
         }
 
         .calculation-button {
-          background: linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: linear-gradient(90deg, rgb(5,166,150), rgb(5,166,150));
           color: white;
           border: none;
           padding: 12px 30px;
@@ -266,7 +266,7 @@ const Home = () => {
         }
 
         .calculation-button:hover {
-          background: linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: linear-gradient(90deg, rgb(5,166,150), rgb(5,166,150));
           transform: scale(1.05);
         }
 
@@ -342,7 +342,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: linear-gradient(90deg, rgb(217,4,61), rgb(217,4,61));
           color: white;
           text-align: center;
           padding: 20px;

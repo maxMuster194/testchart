@@ -39,7 +39,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: url('/bilder/.jpg') no-repeat center/cover, linear-gradient(90deg, rgb(217,4,61), rgb(217,4,61));
           display: flex;
           align-items: flex-start;
           padding: 0;
@@ -342,7 +342,7 @@ const Home = () => {
           width: 100%;
           max-width: 3000px;
           margin: 0 auto;
-          background: linear-gradient(90deg, rgb(217,4,61), rgb(5,166,150));
+          background: linear-gradient(90deg, rgb(217,4,61), rgb(217,4,61));
           color: white;
           text-align: center;
           padding: 20px;
